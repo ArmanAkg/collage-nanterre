@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Collage Nanterre — itinéraire panneaux libres</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<style>
+:root{
+  --bg:#f6f6f4; --panel:#fff; --ink:#16181d; --muted:#6b7280; --line:#e3e5e9;
+  --accent:#e2001a; --accent-ink:#fff; --warn:#b45309;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+#app{display:flex;height:100vh;overflow:hidden}
+#side{width:410px;min-width:350px;background:var(--panel);border-right:1px solid var(--line);
+      display:flex;flex-direction:column;overflow:hidden}
+#map{flex:1;min-width:0}
+header{padding:12px 14px;border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:15px;letter-spacing:.2px}
+header p{margin:3px 0 0;font-size:12px;color:var(--muted)}
+.sec{padding:11px 14px;border-bottom:1px solid var(--line)}
+.sec h2{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:600}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+button{font:inherit;padding:7px 11px;border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;color:var(--ink)}
+button:hover{background:#f0f0ee}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button.primary:hover{filter:brightness(1.08)}
+button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.unlocked{background:var(--warn);color:#fff;border-color:var(--warn)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:100%}
+.seg button{border:0;border-radius:0;flex:1;padding:8px 6px}
+.seg button+button{border-left:1px solid var(--line)}
+input[type=password]{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:7px;flex:1;min-width:0}
+input[type=text],input[type=number]{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+input[type=text]{flex:1;min-width:0}
+#list{flex:1;overflow:auto;padding:4px 0 10px}
+.grp{padding:8px 14px 4px;font-size:11px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:7px;
+     position:sticky;top:0;background:var(--panel);z-index:1;text-transform:uppercase;letter-spacing:.4px}
+.grp .sw{width:10px;height:10px;border-radius:50%;flex:none}
+.grp .n{font-weight:500;text-transform:none;letter-spacing:0}
+.grp button{margin-left:auto;padding:2px 7px;font-size:11px;text-transform:none;letter-spacing:0}
+.it{display:flex;align-items:center;gap:9px;padding:5px 14px;cursor:pointer}
+.it:hover{background:#f3f4f6}
+.it.sel{background:#fdeaec}
+.it .num{width:26px;height:22px;border-radius:6px;flex:none;display:grid;place-items:center;
+         font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+.it .tx{min-width:0;flex:1}
+.it .nm{font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it .meta{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.it .cs{width:7px;height:7px;border-radius:50%;flex:none;opacity:.9}
+.it .act{opacity:0;border:0;background:0;padding:2px 4px;color:var(--muted);font-size:13px}
+.it:hover .act,.it .act.show{opacity:1}
+.tagosm{font-size:9.5px;background:#e7f2e9;color:#137a3f;border-radius:4px;padding:0 4px;font-weight:700}
+.tagmv{font-size:9.5px;background:#fdf0dc;color:var(--warn);border-radius:4px;padding:0 4px;font-weight:700}
+.trash{padding:9px 14px;margin-top:6px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);
+  display:flex;align-items:center;gap:8px}
+.trash button{padding:2px 8px;font-size:11px;margin-left:auto}
+.tagnb{font-size:9.5px;background:#efe7fb;color:#5b34a8;border-radius:4px;padding:0 4px;font-weight:700}
+.tagnew{font-size:9.5px;background:#e6ecfb;color:#2b4fbd;border-radius:4px;padding:0 4px;font-weight:700}
+.tagls{font-size:9.5px;background:#fbe6f2;color:#a3216e;border-radius:4px;padding:0 4px;font-weight:700}
+#maj{color:var(--muted)}
+#srcs button{flex:1;padding:5px 4px;font-size:11.5px;opacity:.45}
+#srcs button.on{opacity:1}
+#res{border-top:1px solid var(--line);max-height:44vh;overflow:auto;background:#fbfbfa}
+.kpi{display:flex;border-bottom:1px solid var(--line)}
+.kpi div{flex:1;padding:9px 12px;text-align:center}
+.kpi div+div{border-left:1px solid var(--line)}
+.kpi b{display:block;font-size:17px}
+.kpi span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+ol.stops{margin:0;padding:6px 14px 12px 34px;font-size:12.5px}
+ol.stops li{padding:2px 0}
+ol.stops .ad{color:var(--muted);font-size:11.5px}
+.note{font-size:11.5px;color:var(--muted);margin:6px 0 0}
+.err{color:#b00020;font-size:12.5px;margin:6px 0 0}
+.hint{background:#fff7d6;border:1px solid #f0dfa0;padding:7px 9px;border-radius:7px;font-size:12px;margin-top:7px}
+.hint.warn{background:#fdf0dc;border-color:#e9c98d}
+label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.badge{background:var(--ink);color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;font-weight:700}
+.leaflet-container{background:#e9e9e7}
+.pin{border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45);display:grid;place-items:center;
+     font:700 10px/1 system-ui;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.4)}
+.pin.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(226,0,26,.35),0 1px 4px rgba(0,0,0,.45)}
+.pin.mv{border-color:var(--warn);border-style:dashed}
+.ordbadge{background:var(--accent);color:#fff;border:2px solid #fff;border-radius:50%;
+     display:grid;place-items:center;font:700 11px/1 system-ui;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.startpin{background:#111;color:#fff;border:2px solid #fff;border-radius:50%;
+     display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.5);font:700 12px/1 system-ui}
+@media (max-width:820px){#app{flex-direction:column}#side{width:100%;min-width:0;height:56vh}#map{height:44vh}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="side">
+    <header>
+      <h1>Collage — panneaux d'affichage libre, Nanterre</h1>
+      <p><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span> emplacements<span id="nbp"></span><span id="maj"></span></p>
+    </header>
+
+    <div class="sec">
+      <h2>1 · Point de départ</h2>
+      <div class="row">
+        <button id="bStart">📍 Choisir sur la carte</button>
+        <button id="bGeo">🛰️ Ma position</button>
+        <button id="bClrStart" title="Effacer le départ">✕</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <input type="text" id="qStart" placeholder="…ou une adresse à Nanterre">
+        <button id="bStartAddr">OK</button>
+      </div>
+      <p class="note" id="startTxt">Aucun départ défini — le 1er panneau servira de départ/arrivée.</p>
+    </div>
+
+    <div class="sec">
+      <h2>2 · Mode de déplacement</h2>
+      <div class="seg" id="modes">
+        <button data-m="foot" class="on">🚶 À pied</button>
+        <button data-m="bike">🚲 Vélo</button>
+        <button data-m="car">🚗 Voiture</button>
+      </div>
+      <div class="row" style="margin-top:7px">
+        <label class="ck">Temps de collage par panneau
+          <input type="number" id="dwell" value="4" min="0" max="60" step="1" style="width:60px"> min
+        </label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2>3 · Panneaux</h2>
+      <div class="row">
+        <input type="text" id="q" placeholder="Filtrer (rue, n°, quartier)…">
+        <button id="bAll">Tout</button>
+        <button id="bNone">Aucun</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button id="bAdd">➕ Ajouter un panneau (clic sur la carte)</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <input type="text" id="qAdd" placeholder="…ou ajouter par adresse">
+        <button id="bAddAddr">OK</button>
+      </div>
+      <div class="row" style="margin-top:6px" id="srcs">
+        <button data-s="carte" class="on src">Carte</button>
+        <button data-s="liste" class="on src">Liste</button>
+        <button data-s="osm"   class="on src">OSM seul</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button id="bAuth">🔑 Modifications protégées</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button id="bExport">⤓ Exporter panneaux.json</button>
+        <button id="bImport">⤒ Importer</button>
+        <button id="bResetAll" title="Oublier les corrections locales">↺</button>
+        <input type="file" id="fImport" accept=".json,application/json" style="display:none">
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button id="bLock">🔒 Positions verrouillées</button>
+        <label class="ck"><input type="checkbox" id="ovl"> Carte d'origine</label>
+      </div>
+      <div id="msg"></div>
+    </div>
+
+    <div id="list"></div>
+
+    <div class="sec" style="border-bottom:0">
+      <div class="row">
+        <button class="primary" id="bGo" style="flex:1">🧮 Calculer l'itinéraire optimal</button>
+        <button id="bClear">Effacer</button>
+      </div>
+      <div id="err"></div>
+    </div>
+
+    <div id="res"></div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<script>
+const OSRM = {
+  foot:{host:'https://routing.openstreetmap.de/routed-foot', prof:'foot',    label:'à pied'},
+  bike:{host:'https://routing.openstreetmap.de/routed-bike', prof:'bike',    label:'à vélo'},
+  car :{host:'https://routing.openstreetmap.de/routed-car',  prof:'driving', label:'en voiture'}
+};
+const LS='collage-nanterre-v2';
+
+/* Mot de passe des modifications (deplacer / supprimer / ajouter).
+   Empreinte SHA-256 du mot de passe — le mot de passe lui-meme n'apparait pas ici.
+   Pour le changer : ouvrez la console du navigateur sur cette page, tapez
+       empreinte('votre-nouveau-mot-de-passe')
+   et collez le resultat ci-dessous. Mot de passe livre par defaut : collage */
+const PWD_HASH='9052689e910848c46d541b69c81b4454af663d2fff6392447ad341c8401c9edb';
+const AUTHKEY='collage-nanterre-auth';
+const PERSO='Mes panneaux';
+let DATA=null, panels=[], sel=new Set(), mode='foot', start=null, startLabel='', markers={}, overlay=null;
+let pickMode=null, routeLayer=null, ordLayer=null, startMarker=null, lastRoute=null, unlocked=false;
+let srcOn={carte:true,liste:true,osm:true,perso:true,local:true};
+let deleted=new Set(), moveTarget=null, authed=false;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtKm=m=>m<1000?Math.round(m)+' m':(m/1000).toFixed(2).replace('.',',')+' km';
+const fmtMin=s=>{const t=Math.round(s/60);return t<60?t+' min':Math.floor(t/60)+' h '+String(t%60).padStart(2,'0');};
+const cleanAddr=s=>String(s||'').replace(/\s+\d{5}\s+.*$/,'').trim();
+const metres=(a,b,c,d)=>Math.hypot((a-c)*111320,(b-d)*111320*Math.cos(a*Math.PI/180));
+const moved=p=>p.lat0!=null && metres(p.lat,p.lon,p.lat0,p.lon0)>1;
+
+const map=L.map('map').setView([48.8924,2.2069],14);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
+  attribution:'&copy; OpenStreetMap · routage OSRM/FOSSGIS · géocodage BAN'}).addTo(map);
+
+/* ---------- persistance ---------- */
+function saveLocal(){
+  const mv={};
+  panels.forEach(p=>{ if(p.src!=='perso'&&moved(p)) mv[p.id]=[p.lat,p.lon]; });
+  try{
+    localStorage.setItem(LS, JSON.stringify({
+      custom:panels.filter(p=>p.src==='perso'), moves:mv, srcOn, deleted:[...deleted],
+      sel:[...sel], mode, start, startLabel, dwell:$('#dwell').value
+    }));
+  }catch(e){}
+}
+function loadLocal(){
+  let s={};
+  try{ s=JSON.parse(localStorage.getItem(LS)||'{}'); }catch(e){ return; }
+  (s.custom||[]).forEach(p=>{ if(!panels.some(q=>q.id===p.id)) panels.push(p); });
+  Object.entries(s.moves||{}).forEach(([id,ll])=>{
+    const p=panels.find(x=>x.id===id);
+    if(p){ p.lat=ll[0]; p.lon=ll[1]; }
+  });
+  if(s.srcOn) Object.assign(srcOn,s.srcOn);
+  (s.deleted||[]).forEach(id=>deleted.add(id));
+  if(s.mode) setMode(s.mode);
+  if(s.dwell!=null) $('#dwell').value=s.dwell;
+  if(s.start) setStart(s.start[0],s.start[1],s.startLabel);
+  (s.sel||[]).forEach(id=>{ if(panels.some(p=>p.id===id)) sel.add(id); });
+}
+
+/* ---------- quartier d'un point (polygones embarques) ---------- */
+function inRing(lat,lon,r){
+  let c=false;
+  for(let i=0,j=r.length-1;i<r.length;j=i++){
+    const [y1,x1]=r[i], [y2,x2]=r[j];
+    if(((y1>lat)!==(y2>lat)) && (lon < (x2-x1)*(lat-y1)/(y2-y1+1e-15)+x1)) c=!c;
+  }
+  return c;
+}
+function quartierOf(lat,lon){
+  const qs=DATA.quartiers||[];
+  for(const [name,rings] of qs)
+    if(rings.some(r=>inRing(lat,lon,r))) return name;
+  let best=PERSO, bd=Infinity;                 // hors limites : quartier le plus proche
+  for(const [name,rings] of qs)
+    for(const r of rings)
+      for(const [y,x] of r){
+        const d=metres(lat,lon,y,x);
+        if(d<bd){ bd=d; best=name; }
+      }
+  return bd<1500?best:PERSO;
+}
+
+/* ---------- couleurs / groupes ---------- */
+const qcol=q=>(DATA.qcol&&DATA.qcol[q])||(q===PERSO?'#e2001a':'#8a8a8a');
+function groupsInOrder(){
+  const names=[...new Set(panels.map(p=>p.q||'Quartier non déterminé'))];
+  const ref=Object.keys(DATA.qcol||{});
+  return names.sort((a,b)=>{
+    const ia=ref.indexOf(a), ib=ref.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b,'fr');
+  });
+}
+
+const visible=p=>srcOn[p.src]!==false && !deleted.has(p.id);
+
+/* ---------- mot de passe des modifications ---------- */
+async function sha256(txt){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(txt));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+window.empreinte=async t=>{ const h=await sha256(t); console.log(h); return h; };
+
+try{ authed = sessionStorage.getItem(AUTHKEY)===PWD_HASH; }catch(e){}
+
+function lockEdits(){
+  authed=false;
+  try{ sessionStorage.removeItem(AUTHKEY); }catch(e){}
+  setUnlocked(false); moveTarget=null; pickMode=null;
+  renderAuth(); updPick();
+}
+function renderAuth(){
+  const b=$('#bAuth');
+  if(!b) return;
+  b.textContent = authed?'🔓 Modifications déverrouillées':'🔑 Modifications protégées';
+  b.classList.toggle('unlocked',authed);
+  b.title = authed?'Cliquer pour reverrouiller':'Un mot de passe est demandé pour modifier les panneaux';
+}
+/* Demande le mot de passe si besoin, puis execute fn. */
+function requireAuth(fn){
+  if(authed){ fn(); return; }
+  askCancel=()=>{};
+  $('#msg').innerHTML='<div class="hint warn"><div>Modification des panneaux — mot de passe :</div>'+
+    '<div class="row" style="margin-top:7px">'+
+    '<input type="password" id="pwdIn" autocomplete="current-password" placeholder="mot de passe">'+
+    '<button id="pwdOk" class="primary">Valider</button>'+
+    '<button id="pwdNo">Annuler</button></div>'+
+    '<div id="pwdErr"></div></div>';
+  const done=()=>{ askCancel=null; $('#msg').innerHTML=''; };
+  const submit=async()=>{
+    const v=$('#pwdIn').value;
+    if(await sha256(v)===PWD_HASH){
+      authed=true;
+      try{ sessionStorage.setItem(AUTHKEY,PWD_HASH); }catch(e){}
+      done(); renderAuth(); fn();
+    }else{
+      $('#pwdErr').innerHTML='<p class="err">Mot de passe incorrect.</p>';
+      $('#pwdIn').value=''; $('#pwdIn').focus();
+    }
+  };
+  $('#pwdOk').onclick=submit;
+  $('#pwdIn').onkeydown=e=>{ if(e.key==='Enter') submit(); };
+  $('#pwdNo').onclick=()=>{ done(); updPick(); };
+  $('#pwdIn').focus();
+}
+
+/* ---------- confirmation dans la page (pas de dialogue natif) ---------- */
+let askCancel=null;
+function ask(html,onOk,onCancel,okLabel){
+  askCancel=onCancel;
+  $('#msg').innerHTML='<div class="hint warn"><div>'+html+'</div>'+
+    '<div class="row" style="margin-top:7px">'+
+    '<button id="askOk" class="primary">'+(okLabel||'Confirmer')+'</button>'+
+    '<button id="askNo">Annuler</button></div></div>';
+  $('#askOk').onclick=()=>{ askCancel=null; $('#msg').innerHTML=''; onOk(); updPick(); };
+  $('#askNo').onclick=()=>{ askCancel=null; $('#msg').innerHTML=''; if(onCancel) onCancel(); updPick(); };
+}
+function askClear(){ if(askCancel){ const c=askCancel; askCancel=null; c(); } $('#msg').innerHTML=''; }
+
+/* ---------- marqueurs ---------- */
+function icon(p){
+  const on=sel.has(p.id), d=on?26:18;
+  const lbl=(on&&p.id.length<=3)?esc(p.id):'';
+  return L.divIcon({className:'',iconSize:[d,d],iconAnchor:[d/2,d/2],
+    html:'<div class="pin'+(on?' sel':'')+(moved(p)?' mv':'')+'" style="width:'+d+'px;height:'+d+
+         'px;background:'+qcol(p.q||PERSO)+'">'+lbl+'</div>'});
+}
+function tip(p){
+  return '<b>'+esc(p.a)+'</b><br>n° '+esc(p.id)+(p.q?' · '+esc(p.q):'')+
+         (p.nb>1?'<br><b>'+p.nb+' panneaux à cet emplacement</b>'+(p.nums?' (n° '+p.nums.join(', ')+')':''):'')+
+         (p.osm?'<br><i>calé sur le panneau OSM ('+p.snap+' m)</i>':'')+
+         (moved(p)?'<br><i>position ajustée à la main</i>':'');
+}
+function addMarker(p){
+  const m=L.marker([p.lat,p.lon],{icon:icon(p),draggable:unlocked});
+  m.on('click',()=>{ if(!unlocked && !moveTarget) toggle(p.id); });
+  m.on('dragend',()=>onDrag(p,m));
+  m.bindTooltip(tip(p),{direction:'top',offset:[0,-8]});
+  m.addTo(map); markers[p.id]=m;
+}
+function drawMarkers(){
+  Object.values(markers).forEach(m=>map.removeLayer(m));
+  markers={}; panels.filter(visible).forEach(addMarker);
+}
+function refreshMarker(id){
+  const p=panels.find(x=>x.id===id);
+  if(!p||!markers[id]) return;
+  markers[id].setIcon(icon(p));
+  markers[id].setLatLng([p.lat,p.lon]);
+  markers[id].setTooltipContent(tip(p));
+}
+function toggle(id){
+  sel.has(id)?sel.delete(id):sel.add(id);
+  refreshMarker(id); renderList(); saveLocal();
+}
+
+/* ---------- deplacement d'un point (verrouille par defaut) ---------- */
+function setUnlocked(v){
+  unlocked=v;
+  $('#bLock').textContent = v?'🔓 Déplacement activé':'🔒 Positions verrouillées';
+  $('#bLock').classList.toggle('unlocked',v);
+  Object.values(markers).forEach(m=>{ if(m.dragging){ v?m.dragging.enable():m.dragging.disable(); } });
+  if(!v) moveTarget=null;
+  updPick();
+}
+$('#bLock').onclick=()=>{ if(unlocked) setUnlocked(false); else requireAuth(()=>setUnlocked(true)); };
+$('#bAuth').onclick=()=>{ if(authed) lockEdits(); else requireAuth(()=>{}); };
+
+$('#srcs').addEventListener('click',e=>{
+  const b=e.target.closest('button.src'); if(!b) return;
+  srcOn[b.dataset.s]=!srcOn[b.dataset.s];
+  b.classList.toggle('on',srcOn[b.dataset.s]);
+  drawMarkers(); renderList(); saveLocal();
+});
+
+function startMove(id){ requireAuth(()=>doStartMove(id)); }
+function doStartMove(id){
+  if(!unlocked) setUnlocked(true);
+  moveTarget=id; updPick();
+  const p=panels.find(x=>x.id===id);
+  if(p) map.setView([p.lat,p.lon],Math.max(map.getZoom(),17));
+}
+function applyMove(p,lat,lon){
+  const d=Math.round(metres(lat,lon,p.lat,p.lon));
+  if(d<2){ refreshMarker(p.id); return; }
+  const old=[p.lat,p.lon];
+  p.lat=+lat.toFixed(6); p.lon=+lon.toFixed(6);
+  refreshMarker(p.id); renderList();
+  ask('Déplacer <b>'+esc(p.a)+'</b> (n° '+esc(p.id)+') de <b>'+d+' m</b> ?',
+      ()=>{ moveTarget=null; const nq=quartierOf(p.lat,p.lon);
+            if(nq!==PERSO && nq!==p.q){ p.q=nq; drawMarkers(); }
+            renderList(); saveLocal(); },
+      ()=>{ p.lat=old[0]; p.lon=old[1]; refreshMarker(p.id); renderList(); },
+      'Garder la nouvelle position');
+}
+function onDrag(p,m){
+  const ll=m.getLatLng();
+  askClear();
+  applyMove(p,ll.lat,ll.lng);
+}
+function resetPos(id){ requireAuth(()=>doResetPos(id)); }
+function doResetPos(id){
+  const p=panels.find(x=>x.id===id);
+  if(!p||p.lat0==null) return;
+  p.lat=p.lat0; p.lon=p.lon0;
+  refreshMarker(id); renderList(); saveLocal();
+}
+
+/* ---------- suppression ---------- */
+function removePanel(id){ requireAuth(()=>doRemovePanel(id)); }
+function doRemovePanel(id){
+  const p=panels.find(x=>x.id===id); if(!p) return;
+  ask('Supprimer <b>'+esc(p.a)+'</b> (n° '+esc(p.id)+
+      (p.nb>1?' — '+p.nb+' panneaux':'')+') de la liste ?',
+      ()=>{
+        if(p.src==='perso'){ panels=panels.filter(x=>x.id!==id); }
+        else { deleted.add(id); }
+        sel.delete(id);
+        if(markers[id]){ map.removeLayer(markers[id]); delete markers[id]; }
+        renderList(); saveLocal();
+      }, null, 'Supprimer');
+}
+function restoreAll(){ requireAuth(()=>{ deleted.clear(); drawMarkers(); renderList(); saveLocal(); }); }
+
+/* ---------- liste ---------- */
+function renderList(){
+  const q=$('#q').value.trim().toLowerCase();
+  let h='';
+  groupsInOrder().forEach(g=>{
+    const items=panels.filter(p=>(p.q||PERSO)===g && visible(p) &&
+      (!q||p.id.toLowerCase().includes(q)||(p.a||'').toLowerCase().includes(q)||g.toLowerCase().includes(q)));
+    if(!items.length) return;
+    const nSel=items.filter(p=>sel.has(p.id)).length;
+    h+='<div class="grp"><span class="sw" style="background:'+qcol(g)+'"></span>'+esc(g)+
+       '<span class="n">'+nSel+'/'+items.length+'</span>'+
+       '<button class="gsel" data-g="'+esc(g)+'">tout / rien</button></div>';
+    items.forEach(p=>{
+      h+='<div class="it'+(sel.has(p.id)?' sel':'')+'" data-id="'+esc(p.id)+'">'+
+         '<div class="num" style="background:'+qcol(p.q||PERSO)+'">'+esc(p.id)+'</div>'+
+         '<div class="tx"><div class="nm">'+esc(p.a)+'</div>'+
+           '<div class="meta">'+
+             (p.src==='carte'?'<span class="cs" style="background:'+p.c+'" title="couleur sur la carte d\'origine"></span>':'')+
+             (p.nb>1?'<span class="tagnb" title="plusieurs panneaux au meme endroit">×'+p.nb+'</span>':'')+
+             (p.osm?'<span class="tagosm" title="position OpenStreetMap">OSM</span>':'')+
+             (p.src==='osm'?'<span class="tagnew" title="absent de la carte">hors carte</span>':'')+
+             (p.src==='liste'?'<span class="tagls" title="issu de la liste">liste</span>':'')+
+             (p.src==='local'?'<span class="tagls" title="ajoute a la main puis publie">ajoute</span>':'')+
+             (moved(p)?'<span class="tagmv">déplacé</span>':'')+
+             '<span>'+esc(p.n?p.n:(p.src==='perso'?'ajouté à la main':(p.q||'')))+'</span>'+
+           '</div></div>'+
+         (moved(p)?'<button class="act show" data-reset="'+esc(p.id)+'" title="Position d origine">↺</button>':'')+
+         '<button class="act" data-move="'+esc(p.id)+'" title="Deplacer ce panneau">✥</button>'+
+         '<button class="act" data-rm="'+esc(p.id)+'" title="Supprimer ce panneau">🗑</button>'+
+         '</div>';
+    });
+  });
+  if(deleted.size) h+='<div class="trash">'+deleted.size+' panneau(x) supprime(s) '+
+    '<button id="bRestore">tout restaurer</button></div>';
+  $('#list').innerHTML=h||'<p class="note" style="padding:14px">Aucun résultat.</p>';
+  if($('#bRestore')) $('#bRestore').onclick=restoreAll;
+  $('#cnt').textContent=sel.size; $('#tot').textContent=panels.length;
+  const nbTot=panels.filter(p=>sel.has(p.id)).reduce((a,p)=>a+(p.nb||1),0);
+  $('#nbp').textContent=nbTot?' — '+nbTot+' panneaux':'';
+}
+
+$('#list').addEventListener('click',e=>{
+  const rs=e.target.closest('[data-reset]');
+  if(rs){ e.stopPropagation(); resetPos(rs.dataset.reset); return; }
+  const mv=e.target.closest('[data-move]');
+  if(mv){ e.stopPropagation(); startMove(mv.dataset.move); return; }
+  const rm=e.target.closest('[data-rm]');
+  if(rm){ e.stopPropagation(); removePanel(rm.dataset.rm); return; }
+  const g=e.target.closest('.gsel');
+  if(g){
+    const ids=panels.filter(p=>(p.q||PERSO)===g.dataset.g && visible(p)).map(p=>p.id);
+    const allOn=ids.every(i=>sel.has(i));
+    ids.forEach(i=>{ allOn?sel.delete(i):sel.add(i); refreshMarker(i); });
+    renderList(); saveLocal(); return;
+  }
+  const it=e.target.closest('.it');
+  if(it){
+    const p=panels.find(x=>x.id===it.dataset.id);
+    toggle(it.dataset.id);
+    if(p) map.panTo([p.lat,p.lon]);
+  }
+});
+$('#q').addEventListener('input',renderList);
+$('#bAll').onclick=()=>{ panels.filter(visible).forEach(p=>sel.add(p.id)); drawMarkers(); renderList(); saveLocal(); };
+$('#bNone').onclick=()=>{ sel.clear(); drawMarkers(); renderList(); saveLocal(); };
+
+/* ---------- mode ---------- */
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+}
+$('#modes').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(b){ setMode(b.dataset.m); saveLocal(); }
+});
+$('#dwell').addEventListener('change',saveLocal);
+
+/* ---------- départ ---------- */
+function setStart(lat,lon,label){
+  start=[lat,lon]; startLabel=label||'';
+  if(startMarker) map.removeLayer(startMarker);
+  startMarker=L.marker([lat,lon],{draggable:true,zIndexOffset:1000,
+    icon:L.divIcon({className:'',iconSize:[28,28],iconAnchor:[14,14],
+      html:'<div class="startpin" style="width:28px;height:28px">D</div>'})}).addTo(map);
+  startMarker.on('dragend',()=>{
+    const ll=startMarker.getLatLng();
+    start=[ll.lat,ll.lng]; startLabel='';
+    $('#startTxt').textContent='Départ : '+ll.lat.toFixed(5)+', '+ll.lng.toFixed(5);
+    saveLocal();
+  });
+  $('#startTxt').textContent='Départ : '+(label||lat.toFixed(5)+', '+lon.toFixed(5));
+  saveLocal();
+}
+$('#bStart').onclick=()=>{ pickMode=pickMode==='start'?null:'start'; updPick(); };
+$('#bAdd').onclick  =()=>{ if(pickMode==='add'){ pickMode=null; updPick(); } else requireAuth(()=>{ pickMode='add'; updPick(); }); };
+function updPick(){
+  $('#bStart').classList.toggle('on',pickMode==='start');
+  $('#bAdd').classList.toggle('on',pickMode==='add');
+  $('#map').style.cursor=(pickMode||moveTarget)?'crosshair':'';
+  if(askCancel) return;
+  if(pickMode){
+    $('#msg').innerHTML='<div class="hint">'+(pickMode==='start'
+      ?'Cliquez sur la carte pour placer le point de depart.'
+      :'Cliquez sur la carte pour placer le nouveau panneau.')+'</div>';
+  }else if(moveTarget){
+    const p=panels.find(x=>x.id===moveTarget);
+    $('#msg').innerHTML='<div class="hint warn">Repositionnement de <b>'+esc(p?p.a:'')+'</b> : '+
+      'cliquez sur la carte a la bonne position, ou faites glisser le point. '+
+      '<button id="bMvCancel">Annuler</button></div>';
+    $('#bMvCancel').onclick=()=>{ moveTarget=null; updPick(); };
+  }else if(unlocked){
+    $('#msg').innerHTML='<div class="hint warn">Deplacement active : faites glisser un point sur la carte, '+
+      'ou utilisez le bouton ✥ d une ligne. Chaque deplacement est confirme. '+
+      'Pensez a re-verrouiller ensuite.</div>';
+  }else{ $('#msg').innerHTML=''; }
+}
+
+$('#bClrStart').onclick=()=>{
+  start=null; startLabel='';
+  if(startMarker){ map.removeLayer(startMarker); startMarker=null; }
+  $('#startTxt').textContent='Aucun départ défini — le 1er panneau servira de départ/arrivée.';
+  saveLocal();
+};
+$('#bGeo').onclick=()=>{
+  if(!navigator.geolocation){ $('#err').innerHTML='<p class="err">Géolocalisation non disponible.</p>'; return; }
+  navigator.geolocation.getCurrentPosition(
+    p=>{ setStart(p.coords.latitude,p.coords.longitude,'ma position'); map.setView([p.coords.latitude,p.coords.longitude],16); },
+    ()=>{ $('#err').innerHTML='<p class="err">Position indisponible (autorisation refusée ou page non sécurisée).</p>'; });
+};
+
+/* ---------- géocodage ---------- */
+async function geocode(q){
+  const r=await fetch('https://api-adresse.data.gouv.fr/search/?limit=1&citycode=92050&q='+encodeURIComponent(q));
+  const d=await r.json();
+  if(!d.features||!d.features.length) throw new Error('Adresse introuvable à Nanterre.');
+  const f=d.features[0];
+  return {lat:f.geometry.coordinates[1],lon:f.geometry.coordinates[0],label:f.properties.label};
+}
+$('#bStartAddr').onclick=async()=>{
+  const q=$('#qStart').value.trim(); if(!q) return;
+  try{ const g=await geocode(q); setStart(g.lat,g.lon,cleanAddr(g.label)); map.setView([g.lat,g.lon],16); $('#err').innerHTML=''; }
+  catch(e){ $('#err').innerHTML='<p class="err">'+esc(e.message)+'</p>'; }
+};
+async function addPanel(lat,lon,label){
+  let a=label;
+  if(!a){
+    try{
+      const r=await fetch('https://api-adresse.data.gouv.fr/reverse/?limit=1&lon='+lon+'&lat='+lat);
+      const d=await r.json();
+      a=(d.features&&d.features[0])?cleanAddr(d.features[0].properties.label):'';
+    }catch(e){ a=''; }
+  }
+  let n=1; while(panels.some(p=>p.id==='P'+n)) n++;
+  const la=+(+lat).toFixed(6), lo=+(+lon).toFixed(6);
+  const p={id:'P'+n,a:a||'panneau ajouté',lat:la,lon:lo,
+           q:quartierOf(la,lo),src:'perso',lat0:la,lon0:lo};
+  panels.push(p); sel.add(p.id); addMarker(p); renderList(); saveLocal();
+}
+$('#bAddAddr').onclick=()=>requireAuth(doAddAddr);
+async function doAddAddr(){
+  const q=$('#qAdd').value.trim(); if(!q) return;
+  try{ const g=await geocode(q); await addPanel(g.lat,g.lon,cleanAddr(g.label)); $('#qAdd').value=''; map.setView([g.lat,g.lon],16); $('#err').innerHTML=''; }
+  catch(e){ $('#err').innerHTML='<p class="err">'+esc(e.message)+'</p>'; }
+}
+map.on('click',e=>{
+  if(moveTarget){
+    const p=panels.find(x=>x.id===moveTarget);
+    if(p){ askClear(); applyMove(p,e.latlng.lat,e.latlng.lng); }
+    return;
+  }
+  if(pickMode==='start'){ setStart(e.latlng.lat,e.latlng.lng); pickMode=null; updPick(); }
+  else if(pickMode==='add'){ addPanel(e.latlng.lat,e.latlng.lng); pickMode=null; updPick(); }
+});
+$('#ovl').addEventListener('change',e=>{
+  if(e.target.checked){ overlay=L.imageOverlay('carte-panneaux.jpg',DATA.bounds,{opacity:.55}).addTo(map); }
+  else if(overlay){ map.removeLayer(overlay); overlay=null; }
+});
+
+/* ---------- optimisation de tournée (TSP boucle) ---------- */
+function tourCost(t,D){ let c=0; for(let i=0;i<t.length;i++) c+=D[t[i]][t[(i+1)%t.length]]; return c; }
+function nearestTour(D,n){
+  const t=[0], seen=new Array(n).fill(false); seen[0]=true;
+  for(let k=1;k<n;k++){
+    let b=-1,bd=Infinity; const c=t[t.length-1];
+    for(let j=0;j<n;j++) if(!seen[j]&&D[c][j]<bd){ bd=D[c][j]; b=j; }
+    t.push(b); seen[b]=true;
+  }
+  return t;
+}
+function improve(tour,D,budgetMs){
+  const n=tour.length, t0=performance.now();
+  let cur=tour.slice(), best=tourCost(cur,D), moved=true;
+  while(moved && performance.now()-t0<budgetMs){
+    moved=false;
+    for(let i=1;i<n-1&&!moved;i++){
+      for(let j=i+1;j<n;j++){
+        const c=cur.slice();
+        const seg=c.slice(i,j+1).reverse();
+        c.splice(i,j-i+1,...seg);
+        const v=tourCost(c,D);
+        if(v<best-1e-6){ best=v; cur=c; moved=true; break; }
+      }
+    }
+    for(let L=1;L<=3&&!moved;L++){
+      for(let i=1;i+L<=n&&!moved;i++){
+        for(let j=1;j<=n-L;j++){
+          if(j>=i&&j<i+L) continue;
+          const c=cur.slice();
+          const seg=c.splice(i,L);
+          const k=j>i?j-L:j;
+          if(k<1||k>c.length) continue;
+          c.splice(k,0,...seg);
+          const v=tourCost(c,D);
+          if(v<best-1e-6){ best=v; cur=c; moved=true; break; }
+        }
+      }
+    }
+  }
+  return cur;
+}
+
+async function osrm(url){
+  const r=await fetch(url);
+  if(!r.ok) throw new Error('Serveur de routage indisponible (HTTP '+r.status+').');
+  const d=await r.json();
+  if(d.code!=='Ok') throw new Error('Routage impossible : '+(d.message||d.code)+'.');
+  return d;
+}
+const coordStr=pts=>pts.map(p=>p[1].toFixed(6)+','+p[0].toFixed(6)).join(';');
+
+$('#bGo').onclick=async()=>{
+  $('#err').innerHTML=''; $('#res').innerHTML='';
+  const chosen=panels.filter(p=>sel.has(p.id)&&visible(p));
+  const pts=[], labels=[];
+  if(start){ pts.push(start); labels.push({id:'D',a:startLabel||'point de départ'}); }
+  chosen.forEach(p=>{ pts.push([p.lat,p.lon]); labels.push(p); });
+  if(pts.length<2){ $('#err').innerHTML='<p class="err">Sélectionnez au moins 2 points (départ + panneau, ou 2 panneaux).</p>'; return; }
+  if(pts.length>95){ $('#err').innerHTML='<p class="err">95 points maximum (départ compris) — réduisez la sélection.</p>'; return; }
+
+  const cfg=OSRM[mode];
+  $('#bGo').disabled=true; $('#bGo').textContent='Calcul en cours…';
+  try{
+    const tab=await osrm(cfg.host+'/table/v1/'+cfg.prof+'/'+coordStr(pts)+'?annotations=duration');
+    const D=tab.durations.map(r=>r.map(v=>(v==null?1e9:v)));
+    let tour=improve(nearestTour(D,pts.length),D,3000);
+    const z=tour.indexOf(0); tour=tour.slice(z).concat(tour.slice(0,z));
+
+    const ordered=tour.map(i=>pts[i]); ordered.push(pts[tour[0]]);
+    let coords=[], dist=0, dur=0, legs=[];
+    for(let s=0;s<ordered.length-1;s+=39){
+      const chunk=ordered.slice(s,Math.min(s+40,ordered.length));
+      if(chunk.length<2) break;
+      const rt=await osrm(cfg.host+'/route/v1/'+cfg.prof+'/'+coordStr(chunk)+'?overview=full&geometries=geojson');
+      const r0=rt.routes[0];
+      dist+=r0.distance; dur+=r0.duration;
+      legs=legs.concat(r0.legs.map(l=>({d:l.distance,t:l.duration})));
+      coords=coords.concat(r0.geometry.coordinates.map(c=>[c[1],c[0]]));
+    }
+
+    if(routeLayer) map.removeLayer(routeLayer);
+    if(ordLayer)   map.removeLayer(ordLayer);
+    routeLayer=L.layerGroup([
+      L.polyline(coords,{color:'#fff',weight:9,opacity:.85}),
+      L.polyline(coords,{color:'#e2001a',weight:4.5,opacity:.95})
+    ]).addTo(map);
+    ordLayer=L.layerGroup(tour.map((idx,k)=>L.marker(pts[idx],{zIndexOffset:900,interactive:false,
+      icon:L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],
+        html:'<div class="ordbadge" style="width:22px;height:22px">'+(k+1)+'</div>'})}))).addTo(map);
+    map.fitBounds(L.polyline(coords).getBounds(),{padding:[30,30]});
+
+    const dwell=(+$('#dwell').value||0)*60*chosen.length;
+    lastRoute={coords,tour,pts,labels,dist,dur,legs};
+
+    let h='<div class="kpi">'+
+      '<div><b>'+fmtKm(dist)+'</b><span>Distance</span></div>'+
+      '<div><b>'+fmtMin(dur)+'</b><span>Trajet '+cfg.label+'</span></div>'+
+      '<div><b>'+fmtMin(dur+dwell)+'</b><span>Avec collage</span></div></div>'+
+      '<div class="sec"><div class="row">'+
+        '<button id="bGpx">⤓ GPX</button>'+
+        '<button id="bTxt">⤓ Feuille de route</button>'+
+        '<button id="bGmap">🗺 Google Maps</button></div>'+
+        '<p class="note">Ordre optimisé pour minimiser le temps total, boucle fermée sur le départ.</p></div>'+
+      '<ol class="stops">';
+    tour.forEach((idx,k)=>{
+      const L0=labels[idx], leg=legs[k];
+      h+='<li><b>'+esc(L0.a)+'</b>'+(L0.id!=='D'?' <span class="ad">(n° '+esc(L0.id)+(L0.nb>1?' — '+L0.nb+' panneaux':'')+')</span>':'')+
+         (leg?'<div class="ad">↳ '+fmtKm(leg.d)+' · '+fmtMin(leg.t)+'</div>':'')+'</li>';
+    });
+    h+='<li><b>Retour — '+esc(labels[tour[0]].a)+'</b></li></ol>';
+    $('#res').innerHTML=h;
+    $('#bGpx').onclick=exportGpx; $('#bTxt').onclick=exportTxt; $('#bGmap').onclick=openGmaps;
+  }catch(e){
+    $('#err').innerHTML='<p class="err">'+esc(e.message)+'</p>';
+  }finally{
+    $('#bGo').disabled=false; $('#bGo').textContent='🧮 Calculer l\'itinéraire optimal';
+  }
+};
+$('#bClear').onclick=()=>{
+  if(routeLayer){ map.removeLayer(routeLayer); routeLayer=null; }
+  if(ordLayer){ map.removeLayer(ordLayer); ordLayer=null; }
+  $('#res').innerHTML=''; $('#err').innerHTML='';
+};
+
+/* ---------- export / import de panneaux.json ---------- */
+/* JSON lisible en diff git : un emplacement par ligne */
+function toJson(d){
+  const NL=String.fromCharCode(10);
+  const {panels:ps, quartiers:qs, ...rest}=d;
+  const head=Object.entries(rest).map(([k,v])=>" "+JSON.stringify(k)+": "+JSON.stringify(v)).join(","+NL);
+  const body=ps.map(x=>"  "+JSON.stringify(x)).join(","+NL);
+  return "{"+NL+head+","+NL+' "quartiers": '+JSON.stringify(qs)+","+NL+
+         ' "panels": ['+NL+body+NL+" ]"+NL+"}"+NL;
+}
+function buildData(){
+  const out=panels.filter(p=>!deleted.has(p.id)).map(p=>{
+    const q={...p};
+    q.lat0=q.lat; q.lon0=q.lon;            // la position corrigée devient la référence
+    if(q.src==='perso'){ q.src='local'; q.c=q.c||'#e2001a'; }
+    return q;
+  });
+  out.sort((a,b)=>{
+    const na=/^\d+$/.test(a.id), nb=/^\d+$/.test(b.id);
+    if(na&&nb) return (+a.id)-(+b.id);
+    if(na!==nb) return na?-1:1;
+    return a.id.localeCompare(b.id,'fr');
+  });
+  return {...DATA, maj:new Date().toISOString().slice(0,10),
+          version:(DATA.version||1)+1, panels:out};
+}
+$('#bExport').onclick=()=>{
+  const d=buildData();
+  dl('panneaux.json', toJson(d), 'application/json');
+  const nLoc=panels.filter(p=>p.src==='perso').length+deleted.size+
+             panels.filter(p=>p.src!=='perso'&&moved(p)).length;
+  $('#msg').innerHTML='<div class="hint"><b>panneaux.json</b> téléchargé ('+d.panels.length+
+    ' emplacements, version '+d.version+').<br>Remplacez le fichier du dépôt par celui-ci, '+
+    'puis <code>git add panneaux.json && git commit -m "maj panneaux" && git push</code>.'+
+    (nLoc?'<br>Une fois poussé, cliquez sur ↺ pour oublier les '+nLoc+
+          ' correction(s) encore stockées dans ce navigateur.':'')+'</div>';
+};
+$('#bImport').onclick=()=>requireAuth(()=>$('#fImport').click());
+$('#fImport').onchange=async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{
+    const d=JSON.parse(await f.text());
+    if(!d.panels||!Array.isArray(d.panels)) throw new Error('Fichier invalide : pas de liste « panels ».');
+    DATA=d; panels=d.panels.slice();
+    deleted.clear(); sel.clear(); moveTarget=null;
+    drawMarkers(); renderList(); renderMaj(); saveLocal();
+    $('#msg').innerHTML='<div class="hint">Importé : '+panels.length+' emplacements'+
+      (d.maj?' (mise à jour du '+esc(d.maj)+')':'')+'.</div>';
+  }catch(err){ $('#err').innerHTML='<p class="err">'+esc(err.message)+'</p>'; }
+  e.target.value='';
+};
+$('#bResetAll').onclick=()=>requireAuth(()=>{
+  ask('Oublier toutes les corrections locales de ce navigateur '+
+      '(déplacements, suppressions, panneaux ajoutés) et revenir au fichier du dépôt ?',
+      ()=>{ try{ localStorage.removeItem(LS); }catch(e){} location.reload(); },
+      null, 'Tout oublier');
+});
+function renderMaj(){
+  $('#maj').textContent = DATA.maj ? ' · données du '+DATA.maj : '';
+}
+
+/* ---------- exports ---------- */
+function dl(name,txt,mime){
+  const b=new Blob([txt],{type:mime||'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b); a.download=name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+function exportGpx(){
+  const r=lastRoute; if(!r) return;
+  let g='<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Collage Nanterre" xmlns="http://www.topografix.com/GPX/1/1">\n';
+  r.tour.forEach((idx,k)=>{
+    const p=r.pts[idx], l=r.labels[idx];
+    g+='<wpt lat="'+p[0]+'" lon="'+p[1]+'"><name>'+(k+1)+' - '+esc(l.a)+'</name><desc>'+esc('n° '+l.id)+'</desc></wpt>\n';
+  });
+  g+='<trk><name>Tournee collage</name><trkseg>\n';
+  r.coords.forEach(c=>{ g+='<trkpt lat="'+c[0].toFixed(6)+'" lon="'+c[1].toFixed(6)+'"/>\n'; });
+  g+='</trkseg></trk>\n</gpx>';
+  dl('tournee-collage.gpx',g,'application/gpx+xml');
+}
+function exportTxt(){
+  const r=lastRoute; if(!r) return;
+  let t='TOURNÉE COLLAGE — Nanterre\nMode : '+OSRM[mode].label+'\n'+
+        'Distance : '+fmtKm(r.dist)+' — Trajet : '+fmtMin(r.dur)+'\n\n';
+  r.tour.forEach((idx,k)=>{
+    const l=r.labels[idx];
+    t+=String(k+1).padStart(2,' ')+'. '+l.a+(l.id!=='D'?'  (n° '+l.id+(l.nb>1?' — '+l.nb+' panneaux':'')+')':'')+'\n';
+  });
+  t+='    ↩ retour au point de départ\n';
+  dl('tournee-collage.txt',t);
+}
+function openGmaps(){
+  const r=lastRoute; if(!r) return;
+  const pts=r.tour.map(i=>r.pts[i]); pts.push(pts[0]);
+  if(pts.length>10) alert('Google Maps est limité à ~10 étapes : seules les 10 premières sont transmises.');
+  const p=pts.slice(0,10).map(c=>c[0].toFixed(6)+','+c[1].toFixed(6));
+  const tm={foot:'walking',bike:'bicycling',car:'driving'}[mode];
+  window.open('https://www.google.com/maps/dir/?api=1&origin='+p[0]+'&destination='+p[p.length-1]+
+    '&waypoints='+p.slice(1,-1).join('%7C')+'&travelmode='+tm,'_blank');
+}
+
+/* ---------- init ---------- */
+function panelBounds(){
+  const b=L.latLngBounds(panels.map(p=>[p.lat,p.lon]));
+  return b.isValid()?b.pad(0.03):L.latLngBounds(DATA.bounds);
+}
+let fitted=false;
+function fitOnce(){
+  if(fitted||!DATA) return;
+  const el=document.getElementById('map');
+  if(el.clientWidth<50||el.clientHeight<50){ requestAnimationFrame(fitOnce); return; }
+  map.invalidateSize();
+  map.fitBounds(panelBounds(),{padding:[20,20]});
+  fitted=true;
+}
+new ResizeObserver(()=>{ map.invalidateSize(); fitOnce(); }).observe(document.getElementById('map'));
+window.addEventListener('load',fitOnce);
+
+fetch('panneaux.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{
+  DATA=d;
+  panels=d.panels.slice();
+  loadLocal();
+  document.querySelectorAll('#srcs button.src').forEach(b=>b.classList.toggle('on',srcOn[b.dataset.s]!==false));
+  drawMarkers(); renderList(); renderAuth(); renderMaj();
+  fitOnce();
+}).catch(()=>{
+  $('#err').innerHTML='<p class="err">Impossible de charger <code>panneaux.json</code>. '+
+    'Ouvrez la page via un serveur local (voir LISEZ-MOI.md), pas par double-clic.</p>';
+});
+</script>
+</body>
+</html>
