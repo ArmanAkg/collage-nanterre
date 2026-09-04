@@ -300,6 +300,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
           <button id="vSkip">⏭ Passer</button>
         </div>
         <p class="note" id="vHint"></p>
+        <div id="vMsg"></div>
       </div>
     </div>
     <div id="list"></div>
@@ -415,6 +416,10 @@ function groupsInOrder(){
 
 const visible=p=>srcOn[p.src]!==false && !deleted.has(p.id);
 
+/* ---------- boite de message visible selon le mode ---------- */
+const msgBox=()=>(vOn && $('#vMsg')) ? $('#vMsg') : $('#msg');
+function msgClear(){ $('#msg').innerHTML=''; const v=$('#vMsg'); if(v) v.innerHTML=''; }
+
 /* ---------- mot de passe des modifications ---------- */
 async function sha256(txt){
   const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(txt));
@@ -439,16 +444,16 @@ function renderAuth(){
 }
 /* Demande le mot de passe si besoin, puis execute fn. */
 function requireAuth(fn){
-  const ad=$('#admin'); if(ad) ad.open=true;
+  const ad=$('#admin'); if(ad && !vOn) ad.open=true;
   if(authed){ fn(); return; }
   askCancel=()=>{};
-  $('#msg').innerHTML='<div class="hint warn"><div>Modification des panneaux — mot de passe :</div>'+
+  msgBox().innerHTML='<div class="hint warn"><div>Modification des panneaux — mot de passe :</div>'+
     '<div class="row" style="margin-top:7px">'+
     '<input type="password" id="pwdIn" autocomplete="current-password" placeholder="mot de passe">'+
     '<button id="pwdOk" class="primary">Valider</button>'+
     '<button id="pwdNo">Annuler</button></div>'+
     '<div id="pwdErr"></div></div>';
-  const done=()=>{ askCancel=null; $('#msg').innerHTML=''; };
+  const done=()=>{ askCancel=null; msgClear(); };
   const submit=async()=>{
     const v=$('#pwdIn').value;
     if(await sha256(v)===PWD_HASH){
@@ -470,14 +475,14 @@ function requireAuth(fn){
 let askCancel=null;
 function ask(html,onOk,onCancel,okLabel){
   askCancel=onCancel;
-  $('#msg').innerHTML='<div class="hint warn"><div>'+html+'</div>'+
+  msgBox().innerHTML='<div class="hint warn"><div>'+html+'</div>'+
     '<div class="row" style="margin-top:7px">'+
     '<button id="askOk" class="primary">'+(okLabel||'Confirmer')+'</button>'+
     '<button id="askNo">Annuler</button></div></div>';
-  $('#askOk').onclick=()=>{ askCancel=null; $('#msg').innerHTML=''; onOk(); updPick(); };
-  $('#askNo').onclick=()=>{ askCancel=null; $('#msg').innerHTML=''; if(onCancel) onCancel(); updPick(); };
+  $('#askOk').onclick=()=>{ askCancel=null; msgClear(); onOk(); updPick(); };
+  $('#askNo').onclick=()=>{ askCancel=null; msgClear(); if(onCancel) onCancel(); updPick(); };
 }
-function askClear(){ if(askCancel){ const c=askCancel; askCancel=null; c(); } $('#msg').innerHTML=''; }
+function askClear(){ if(askCancel){ const c=askCancel; askCancel=null; c(); } msgClear(); }
 
 /* ---------- marqueurs ---------- */
 function icon(p){
@@ -688,6 +693,7 @@ function updPick(){
   $('#bAdd').classList.toggle('on',pickMode==='add');
   $('#map').style.cursor=(pickMode||moveTarget)?'crosshair':'';
   if(askCancel) return;
+  if(vOn){ $('#msg').innerHTML=''; return; }
   if(pickMode){
     $('#msg').innerHTML='<div class="hint">'+(pickMode==='start'
       ?'Cliquez sur la carte pour placer le point de depart.'
