@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 124 emplacements : n°, adresse, quartier, coordonnées, lien OSM |
+| `panneaux.json` | les 103 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
 | `panneaux_suppélementaires.txt` | la liste d'adresses d'origine |
@@ -79,19 +79,26 @@ mémorisés dans le navigateur.
 
 ## D'où viennent les données
 
-**123 emplacements, 138 panneaux physiques**, sur les 11 quartiers de Nanterre.
+**103 emplacements, 117 panneaux physiques**, sur 10 quartiers de Nanterre.
+
+Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
+20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
+statut daté — 93 confirmés, 10 marqués introuvables. Les emplacements introuvables sont
+conservés volontairement : ils restent sélectionnables, à trancher lors d'un prochain
+passage sur le terrain. Les décomptes par source ci-dessous décrivent l'origine des
+données avant vérification.
 
 Trois sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM seul` :
 
-- **`Carte` — 73 emplacements** extraits de la carte d'origine : détection des pastilles
+- **`Carte` — 68 emplacements restants** extraits de la carte d'origine : détection des pastilles
   de couleur, puis calage de l'image sur le réseau routier OpenStreetMap
   (≈ 1,8 m/pixel). Les numéros 1–73 de la carte sont conservés.
   - `17` et `18` sont les deux repères triangulaires de la carte.
   - `58` était superposé à `57` : les deux ont été fusionnés en un emplacement à 2 panneaux.
   - `R` est la pastille rouge sans numéro, au nord de la carte.
-- **`Liste` — 7 emplacements** (n° 74 à 80) issus de `panneaux_suppélementaires.txt`,
+- **`Liste` — 7 emplacements restants** (n° 74 à 80) issus de `panneaux_suppélementaires.txt`,
   géocodés via la Base Adresse Nationale.
-- **`OSM seul` — 43 emplacements** (n° 82 et suivants) présents dans OpenStreetMap mais
+- **`OSM seul` — 28 emplacements restants** (n° 82 et suivants) présents dans OpenStreetMap mais
   **absents de la carte d'origine**, dont **11 dans le quartier du Petit-Nanterre**, jamais
   traité jusqu'ici. Étiquetés `hors carte` dans la liste.
 
