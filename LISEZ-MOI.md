@@ -41,11 +41,16 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
    sélectionner. `tout / rien` sélectionne un quartier entier ; le champ de filtre accepte
    un numéro, un nom de rue ou un quartier. Les boutons `Carte` / `Liste` / `OSM seul`
    masquent ou affichent une source (le filtre s'applique aussi à `Tout` et `tout / rien`).
-4. **Mot de passe** — ajouter, déplacer ou supprimer un panneau demande un mot de passe.
-   Il est demandé à la première action de modification, puis retenu jusqu'à la fermeture
-   de l'onglet ; le bouton `🔓 Modifications déverrouillées` permet de reverrouiller
-   immédiatement. **Mot de passe livré : `collage`.** Sélectionner des panneaux et calculer
-   un itinéraire ne demande rien. Voir « Changer le mot de passe » plus bas.
+4. **Gestion des panneaux** — tous les outils d'édition sont regroupés dans le volet
+   `⚙ Gestion des panneaux — réservé`, **replié par défaut** : filtres par source, mot de
+   passe, verrou des positions, ajout, export/import, calque de la carte d'origine. Les
+   boutons `✥` et `🗑` des lignes n'apparaissent qu'une fois le mot de passe saisi. Pour
+   qui vient juste préparer une tournée, l'outil se limite donc à : départ, mode,
+   sélection, calcul.
+
+   **Mot de passe livré : `collage`.** Il est demandé à la première action de modification,
+   puis retenu jusqu'à la fermeture de l'onglet ; `🔓 Modifications déverrouillées`
+   reverrouille immédiatement. Voir « Changer le mot de passe » plus bas.
 5. **Ajouter un panneau** — bouton « Ajouter un panneau » puis clic sur la carte, ou
    saisie d'une adresse. L'adresse est retrouvée automatiquement. Les panneaux ajoutés
    portent un numéro `P1`, `P2`…
@@ -116,6 +121,24 @@ OSM, `admin_level=10`). La pastille de couleur à côté des adresses issues de 
 rappelle la couleur du panneau sur la carte d'origine.
 
 Le calque « Carte d'origine » permet de vérifier chaque point contre la carte de départ.
+
+## Sur téléphone
+
+L'outil est prévu pour être utilisé sur le terrain, téléphone en main :
+
+- la **carte occupe tout l'écran**, le panneau devient une **feuille coulissante** en bas,
+  repliée par défaut ; on l'ouvre d'un appui sur la barre ;
+- cette barre reste toujours visible et affiche le résumé — nombre d'emplacements et de
+  panneaux sélectionnés, puis distance et durée une fois l'itinéraire calculé — avec un
+  bouton **Calculer** directement accessible ;
+- après le calcul, la feuille se replie automatiquement pour laisser voir le tracé, cadré
+  au-dessus de la barre ;
+- le réglage départ + mode est lui aussi replié en une ligne de résumé
+  (`Hôtel de ville · à vélo`), pour laisser la place à la liste ;
+- cibles tactiles agrandies, champs en 16 px pour éviter le zoom automatique d'iOS,
+  hauteur en `dvh` pour ne pas être coupé par la barre d'adresse.
+
+Ajouter l'adresse à l'écran d'accueil du téléphone donne un accès en un geste.
 
 ## Publier ses corrections
 
