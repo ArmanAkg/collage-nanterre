@@ -6,7 +6,7 @@ calcule la **boucle la plus courte** qui passe devant chacun et revient au dépa
 
 ## 👉 Ouvrir l'outil
 
-**<https://REMPLACER-PAR-VOTRE-COMPTE.github.io/collage-nanterre/>**
+**<https://armanakg.github.io/collage-nanterre/>**
 
 Rien à installer, ça marche depuis un téléphone. Le bouton « Ma position » ne fonctionne
 que sur cette adresse en `https`, pas sur un fichier ouvert en local.
@@ -46,7 +46,7 @@ Le site est une page statique servie par **GitHub Pages** depuis la branche `mai
 Première mise en ligne, une fois le dépôt créé sur GitHub :
 
 ```bash
-git remote add origin https://github.com/VOTRE-COMPTE/collage-nanterre.git
+git remote add origin https://github.com/ArmanAkg/collage-nanterre.git
 git push -u origin main
 ```
 
