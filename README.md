@@ -22,14 +22,6 @@ que sur cette adresse en `https`, pas sur un fichier ouvert en local.
 
 **123 emplacements, 138 panneaux**, sur les 11 quartiers de Nanterre.
 
-## Vérifier les panneaux
-
-Un mode dédié (`⚙ Gestion des panneaux → 🔍 Vérifier les panneaux`) passe les emplacements
-en revue un par un, en commençant par les plus douteux : photo de rue Panoramax affichée
-directement quand elle existe (46 emplacements sur 123), lien Street View sinon, et quatre
-boutons — *confirmé*, *introuvable*, *repositionner*, *supprimer*. Les statuts sont datés
-et publiés avec le reste des données.
-
 ## Modifier les panneaux
 
 Déplacer, ajouter ou supprimer un panneau demande un **mot de passe** et ne change les

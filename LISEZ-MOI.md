@@ -140,52 +140,16 @@ L'outil est prévu pour être utilisé sur le terrain, téléphone en main :
 
 Ajouter l'adresse à l'écran d'accueil du téléphone donne un accès en un geste.
 
-## Mode vérification
+## Statuts de vérification
 
-`⚙ Gestion des panneaux → 🔍 Vérifier les panneaux` ouvre une file de contrôle : un
-emplacement à l'écran, la carte centrée dessus avec un cercle rouge, une photo de rue, et
-les décisions à portée de clic.
+Chaque emplacement peut porter un statut issu de la campagne de vérification :
+`✓ vérifié` ou `? introuvable`, avec sa date. Il s'affiche en étiquette dans la liste et
+sur la carte (liseré vert, ou point estompé pour un emplacement introuvable), et il est
+enregistré dans `panneaux.json`.
 
-**L'ordre est calculé, pas alphabétique.** Passent en premier les emplacements les plus
-douteux : ceux **sans nœud OpenStreetMap** (position déduite de la carte, à 10–50 m près),
-puis ceux dont le relevé OSM est **sans date**, puis **2018 ou avant**, puis 2019-2022, et
-enfin les relevés récents. L'en-tête indique la position dans la file et le nombre restant
-à statuer.
-
-**Les photos viennent de [Panoramax](https://panoramax.fr)**, la plateforme d'imagerie de
-rue ouverte (IGN / OpenStreetMap France), licence CC-BY-SA. L'outil cherche les prises de
-vue dans un rayon de 90 m, calcule pour chacune si le panneau tombe **dans le champ de la
-caméra** (azimut de prise de vue contre azimut vers le panneau, comparés à l'angle de
-champ), et affiche d'abord celles qui le voient, puis les plus proches. Le bandeau donne
-la distance, la date, l'auteur et la licence ; `↻ Autre photo` fait défiler les autres
-prises de vue, et un clic sur l'image ouvre le visualiseur Panoramax.
-
-Couverture réelle sur Nanterre, mesurée sur les 8 177 photos disponibles :
-**46 emplacements sur 123 ont une photo à moins de 90 m** (médiane 19 m), dont 40 datant
-de 2025 ou 2026. Pour les **77 autres**, le bouton `🗺 Street View` ouvre Google Maps à la
-bonne position dans un nouvel onglet.
-
-Quatre décisions, toutes enregistrées avec la date :
-
-| Action | Effet |
-|---|---|
-| `✅ Confirmé` | marque l'emplacement vérifié, passe au suivant |
-| `❓ Introuvable` | marque l'emplacement douteux (il reste dans la liste, grisé sur la carte) |
-| `✥ Repositionner` | attend un clic sur la carte, avec confirmation de la distance |
-| `🗑 Supprimer` | retire l'emplacement, comme depuis la liste |
-
-Le statut apparaît ensuite comme étiquette `✓ vérifié` ou `? introuvable` dans la liste, et
-sur la carte par un liseré vert ou un point estompé. Il part dans `panneaux.json` à
-l'export, donc **le travail de vérification se publie comme le reste** et profite à tout le
-monde.
-
-> **Pourquoi pas une détection automatique ?** Les conditions d'utilisation de Google Maps
-> interdisent de passer leur imagerie dans un modèle d'IA et d'en faire du téléchargement
-> de masse. Sur l'imagerie ouverte, où c'est permis, la couverture est partielle et
-> distinguer un panneau d'affichage libre d'un abribus publicitaire ou d'un panneau
-> municipal depuis une photo de rue produit trop d'erreurs pour éviter la revérification.
-> L'outil automatise donc la logistique — ordre, cadrage, photo, suivi — et laisse le
-> jugement à l'œil humain. Compter environ 10 secondes par emplacement.
+Le mode de vérification assisté par photos de rue qui a servi à produire ces statuts a été
+retiré de l'interface une fois la campagne terminée. Il reste disponible dans l'historique
+git (`git show facd6d5`) si une nouvelle campagne devient nécessaire.
 
 ## Publier ses corrections
 
