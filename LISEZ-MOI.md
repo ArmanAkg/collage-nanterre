@@ -40,7 +40,10 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 3. **Panneaux** — clic sur un point de la carte ou sur une ligne de la liste pour le
    sélectionner. `tout / rien` sélectionne un quartier entier ; le champ de filtre accepte
    un numéro, un nom de rue ou un quartier. Les boutons `Carte` / `Liste` / `OSM seul`
-   masquent ou affichent une source (le filtre s'applique aussi à `Tout` et `tout / rien`).
+   du volet réservé masquent ou affichent une source (le filtre s'applique aussi à `Tout`
+   et `tout / rien`). Ce filtre est **mémorisé dans le navigateur** : si des emplacements
+   sont masqués, un bandeau jaune l'annonce au-dessus de la liste avec un bouton
+   **Tout afficher**, et le compteur d'en-tête indique « N affichés sur M ».
 4. **Gestion des panneaux** — tous les outils d'édition sont regroupés dans le volet
    `⚙ Gestion des panneaux — réservé`, **replié par défaut** : filtres par source, mot de
    passe, verrou des positions, ajout, export/import, calque de la carte d'origine. Les

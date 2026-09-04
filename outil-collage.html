@@ -58,6 +58,9 @@ input[type=text]{flex:1;min-width:0}
 .it:hover .act,.it .act.show{opacity:1}
 .tagosm{font-size:9.5px;background:#e7f2e9;color:#137a3f;border-radius:4px;padding:0 4px;font-weight:700}
 .tagmv{font-size:9.5px;background:#fdf0dc;color:var(--warn);border-radius:4px;padding:0 4px;font-weight:700}
+.filtw{background:#fff7d6;border:1px solid #f0dfa0;border-radius:7px;padding:7px 9px;margin-top:8px;
+  font-size:12px;display:flex;align-items:center;gap:8px}
+.filtw button{margin-left:auto;padding:4px 9px;font-size:11.5px;white-space:nowrap}
 .trash{padding:9px 14px;margin-top:6px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);
   display:flex;align-items:center;gap:8px}
 .trash button{padding:2px 8px;font-size:11px;margin-left:auto}
@@ -164,7 +167,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
     </div>
     <header>
       <h1>Collage — panneaux d'affichage libre, Nanterre</h1>
-      <p><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span> emplacements<span id="nbp"></span><span id="maj"></span></p>
+      <p><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span><span id="nbp"></span><span id="maj"></span></p>
     </header>
 
     <details id="setup" open>
@@ -206,6 +209,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
         <button id="bAll">Tout</button>
         <button id="bNone">Aucun</button>
       </div>
+      <div id="filtwarn"></div>
       <details id="admin">
         <summary>⚙ Gestion des panneaux <span class="sub">— réservé</span></summary>
         <div class="row" style="margin-top:8px" id="srcs">
@@ -466,6 +470,11 @@ function setUnlocked(v){
 $('#bLock').onclick=()=>{ if(unlocked) setUnlocked(false); else requireAuth(()=>setUnlocked(true)); };
 $('#bAuth').onclick=()=>{ if(authed) lockEdits(); else requireAuth(()=>{}); };
 
+function showAllSources(){
+  Object.keys(srcOn).forEach(k=>srcOn[k]=true);
+  document.querySelectorAll('#srcs button.src').forEach(b=>b.classList.add('on'));
+  drawMarkers(); renderList(); saveLocal();
+}
 $('#srcs').addEventListener('click',e=>{
   const b=e.target.closest('button.src'); if(!b) return;
   srcOn[b.dataset.s]=!srcOn[b.dataset.s];
@@ -559,7 +568,16 @@ function renderList(){
     '<button id="bRestore">tout restaurer</button></div>';
   $('#list').innerHTML=h||'<p class="note" style="padding:14px">Aucun résultat.</p>';
   if($('#bRestore')) $('#bRestore').onclick=restoreAll;
-  $('#cnt').textContent=sel.size; $('#tot').textContent=panels.length;
+  const caches=panels.filter(p=>!deleted.has(p.id)&&srcOn[p.src]===false).length;
+  $('#filtwarn').innerHTML = caches
+    ? '<div class="filtw"><b>'+caches+'</b> emplacement'+(caches>1?'s':'')+' masqué'+(caches>1?'s':'')+
+      ' par un filtre <button id="bShowAll">Tout afficher</button></div>'
+    : '';
+  if($('#bShowAll')) $('#bShowAll').onclick=showAllSources;
+  const affiches=panels.filter(visible).length;
+  $('#cnt').textContent=sel.size;
+  $('#tot').textContent = caches ? affiches+' emplacements affichés sur '+panels.length
+                                 : panels.length+' emplacements';
   if(typeof syncGrab==='function'){ syncGrab(); syncSetup(); }
   const nbTot=panels.filter(p=>sel.has(p.id)).reduce((a,p)=>a+(p.nb||1),0);
   $('#nbp').textContent=nbTot?' — '+nbTot+' panneaux':'';
