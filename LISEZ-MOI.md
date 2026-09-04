@@ -6,14 +6,18 @@ panneau sélectionné et revient au départ.
 
 ## Lancer l'outil
 
-Le fichier doit être servi par un petit serveur local (le navigateur bloque la lecture
-de `panneaux.json` en `file://`). Depuis ce dossier :
+En ligne : l'adresse GitHub Pages du dépôt (voir [README.md](README.md)). C'est la façon
+normale de s'en servir — et la seule où « Ma position » fonctionne, la géolocalisation
+exigeant `https`.
+
+En local, pour développer :
 
 ```bash
 python -m http.server 8777
 ```
 
-Puis ouvrir <http://localhost:8777/outil-collage.html>.
+puis <http://localhost:8777/outil-collage.html>. Le double-clic sur le fichier ne marche
+pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 
 ## Fichiers
 
@@ -24,6 +28,8 @@ Puis ouvrir <http://localhost:8777/outil-collage.html>.
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
 | `panneaux_suppélementaires.txt` | la liste d'adresses d'origine |
+| `index.html` | redirection vers l'outil, pour l'adresse racine du site |
+| `README.md` | présentation du dépôt et procédure de publication |
 
 ## Utilisation
 
@@ -110,6 +116,26 @@ OSM, `admin_level=10`). La pastille de couleur à côté des adresses issues de 
 rappelle la couleur du panneau sur la carte d'origine.
 
 Le calque « Carte d'origine » permet de vérifier chaque point contre la carte de départ.
+
+## Publier ses corrections
+
+Les modifications faites dans l'outil (déplacements, ajouts, suppressions) restent dans le
+`localStorage` du navigateur : personne d'autre ne les voit. Pour les rendre officielles :
+
+1. **⤓ Exporter panneaux.json** télécharge le fichier de données à jour — les positions
+   corrigées y deviennent les positions de référence, les panneaux supprimés en sont
+   retirés, les panneaux ajoutés y figurent avec leur quartier (calculé à partir des
+   limites administratives embarquées dans le fichier) ;
+2. remplacer `panneaux.json` du dépôt par ce fichier, puis `git commit` et `git push` ;
+3. **↺** oublie ensuite les corrections locales du navigateur, désormais inutiles.
+
+**⤒ Importer** recharge un `panneaux.json` sans passer par le dépôt : pratique pour
+vérifier un export avant de le publier, ou pour intégrer le fichier d'un camarade.
+
+Le fichier exporté est écrit **un emplacement par ligne**, pour que `git diff` montre
+exactement ce qui a changé. Il porte une date (`maj`) et un numéro de `version`, tous deux
+affichés en haut du panneau, ce qui permet de vérifier d'un coup d'œil que chacun travaille
+sur la même version.
 
 ## Changer le mot de passe
 
