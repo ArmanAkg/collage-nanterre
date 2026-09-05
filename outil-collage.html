@@ -67,6 +67,7 @@ input[type=text]{flex:1;min-width:0}
 .tagnb{font-size:9.5px;background:#efe7fb;color:#5b34a8;border-radius:4px;padding:0 4px;font-weight:700}
 .tagnew{font-size:9.5px;background:#e6ecfb;color:#2b4fbd;border-radius:4px;padding:0 4px;font-weight:700}
 .tagls{font-size:9.5px;background:#fbe6f2;color:#a3216e;border-radius:4px;padding:0 4px;font-weight:700}
+.tagfr{font-size:9.5px;background:#e8eef0;color:#3d6070;border-radius:4px;padding:0 4px;font-weight:700}
 #maj{color:var(--muted)}
 #res{flex:none;border-top:1px solid var(--line);max-height:44vh;overflow:auto;background:#fbfbfa}
 .kpi{display:flex;border-bottom:1px solid var(--line)}
@@ -216,6 +217,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
           <button data-s="carte" class="on src">Carte</button>
           <button data-s="liste" class="on src">Liste</button>
           <button data-s="osm"   class="on src">OSM seul</button>
+          <button data-s="frama" class="on src">Framacarte</button>
         </div>
         <div class="row" style="margin-top:6px">
           <button id="bAuth">🔑 Modifications protégées</button>
@@ -272,7 +274,7 @@ const AUTHKEY='collage-nanterre-auth';
 const PERSO='Mes panneaux';
 let DATA=null, panels=[], sel=new Set(), mode='foot', start=null, startLabel='', markers={}, overlay=null;
 let pickMode=null, routeLayer=null, ordLayer=null, startMarker=null, lastRoute=null, unlocked=false;
-let srcOn={carte:true,liste:true,osm:true,perso:true,local:true};
+let srcOn={carte:true,liste:true,osm:true,perso:true,local:true,frama:true};
 let deleted=new Set(), moveTarget=null, authed=false;
 
 const $=s=>document.querySelector(s);
@@ -553,6 +555,7 @@ function renderList(){
              (p.osm?'<span class="tagosm" title="position OpenStreetMap">OSM</span>':'')+
              (p.src==='osm'?'<span class="tagnew" title="absent de la carte">hors carte</span>':'')+
              (p.src==='liste'?'<span class="tagls" title="issu de la liste">liste</span>':'')+
+             (p.src==='frama'?'<span class="tagfr" title="releve sur la carte framacarte">framacarte</span>':'')+
              (p.src==='local'?'<span class="tagls" title="ajoute a la main puis publie">ajoute</span>':'')+
              (moved(p)?'<span class="tagmv">déplacé</span>':'')+
              (p.v?'<span class="vbadge '+(p.v.s==='ok'?'vok">✓ vérifié':'vko">? introuvable')+'</span>':'')+

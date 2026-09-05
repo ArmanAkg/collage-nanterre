@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 103 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `panneaux.json` | les 106 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
 | `panneaux_suppélementaires.txt` | la liste d'adresses d'origine |
@@ -82,7 +82,7 @@ mémorisés dans le navigateur.
 
 ## D'où viennent les données
 
-**103 emplacements, 117 panneaux physiques**, sur 10 quartiers de Nanterre.
+**106 emplacements, 120 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
@@ -91,7 +91,8 @@ conservés volontairement : ils restent sélectionnables, à trancher lors d'un 
 passage sur le terrain. Les décomptes par source ci-dessous décrivent l'origine des
 données avant vérification.
 
-Trois sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM seul` :
+Quatre sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM seul` /
+`Framacarte` :
 
 - **`Carte` — 68 emplacements restants** extraits de la carte d'origine : détection des pastilles
   de couleur, puis calage de l'image sur le réseau routier OpenStreetMap
@@ -104,6 +105,27 @@ Trois sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM
 - **`OSM seul` — 28 emplacements restants** (n° 82 et suivants) présents dans OpenStreetMap mais
   **absents de la carte d'origine**, dont **11 dans le quartier du Petit-Nanterre**, jamais
   traité jusqu'ici. Étiquetés `hors carte` dans la liste.
+- **`Framacarte` — 3 emplacements** (n° 123 à 125) : `3 Résidence des Iris`,
+  `8 Rue Jacques Decour`, `56 Rue Abdelmalek Sayad`. Étiquetés `framacarte`,
+  **non vérifiés**, à contrôler sur place.
+
+### Sources recoupées, sans apport
+
+Trois autres sources ont été comparées aux données de l'outil en septembre 2026 :
+
+- le PDF *Fi Nanterre — carte panneaux affichage* est la **version imprimable de la carte
+  d'origine** (mêmes numéros 1 à 73) : rien de nouveau ;
+- **absurdediffusion.eu/commune/nanterre** recense 42 entrées, soit 40 emplacements
+  distincts : **tous déjà présents**, 39 à moins de 30 m d'un de nos points ;
+- la **carte framacarte** (uMap anonyme du 17 avril 2023, jamais modifiée depuis, sans
+  licence déclarée) contient 84 points : 68 déjà couverts, 3 retenus ci-dessus, 5 qui
+  correspondent à des emplacements supprimés lors de la vérification terrain, et 8 écartés
+  faute d'élément corroborant.
+
+Les 5 en contradiction avec la vérification sont les anciens n° 3, 7, 31, 35 et 71. Pour
+trois d'entre eux (71, 35, 31), un nœud OSM « Affichage Libre » existe encore à 5–37 m :
+deux sources indépendantes signalent donc un panneau là où la vérification a conclu à son
+absence. À trancher lors d'un prochain passage.
 
 **Recalage sur OpenStreetMap** — OSM référence des nœuds `board_type=notice` nommés
 « Affichage Libre », relevés sur le terrain. Chaque point de la carte situé à **70 m ou
