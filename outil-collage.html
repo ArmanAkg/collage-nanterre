@@ -58,6 +58,9 @@ input[type=text]{flex:1;min-width:0}
 .it:hover .act,.it .act.show{opacity:1}
 .tagosm{font-size:9.5px;background:#e7f2e9;color:#137a3f;border-radius:4px;padding:0 4px;font-weight:700}
 .tagmv{font-size:9.5px;background:#fdf0dc;color:var(--warn);border-radius:4px;padding:0 4px;font-weight:700}
+.newver{background:#e7f2e9;border:1px solid #b9dcc4;border-radius:7px;padding:8px 10px;
+  margin:0 0 8px;font-size:12px;line-height:1.4}
+.newver button{margin-top:6px;padding:4px 9px;font-size:11.5px}
 .filtw{background:#fff7d6;border:1px solid #f0dfa0;border-radius:7px;padding:7px 9px;margin-top:8px;
   font-size:12px;display:flex;align-items:center;gap:8px}
 .filtw button{margin-left:auto;padding:4px 9px;font-size:11.5px;white-space:nowrap}
@@ -168,6 +171,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
     </div>
     <header>
       <h1>Collage — panneaux d'affichage libre, Nanterre</h1>
+      <div id="newver"></div>
       <p><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span><span id="nbp"></span><span id="maj"></span></p>
     </header>
 
@@ -297,13 +301,26 @@ function saveLocal(){
   try{
     localStorage.setItem(LS, JSON.stringify({
       custom:panels.filter(p=>p.src==='perso'), moves:mv, srcOn, deleted:[...deleted], verifs:vs,
+      base:(DATA&&DATA.version)||0,
       sel:[...sel], mode, start, startLabel, dwell:$('#dwell').value
     }));
   }catch(e){}
 }
+let staleInfo=null;
 function loadLocal(){
   let s={};
   try{ s=JSON.parse(localStorage.getItem(LS)||'{}'); }catch(e){ return; }
+  // Les corrections locales sont des modifications non encore publiées. Si le fichier
+  // publié est plus récent que la version sur laquelle elles ont été faites, c'est
+  // qu'elles ont été publiées : on les écarte pour ne pas masquer les données à jour.
+  const base=s.base==null?0:s.base, cur=(DATA&&DATA.version)||0;
+  const aDesCorrections=(s.custom||[]).length+Object.keys(s.moves||{}).length+
+                        (s.deleted||[]).length+Object.keys(s.verifs||{}).length;
+  if(cur>base && aDesCorrections){
+    try{ localStorage.setItem(LS+'-precedent', JSON.stringify(s)); }catch(e){}
+    staleInfo={base, cur, maj:DATA.maj||'', n:aDesCorrections};
+    s={sel:s.sel, mode:s.mode, start:s.start, startLabel:s.startLabel, dwell:s.dwell, srcOn:s.srcOn};
+  }
   (s.custom||[]).forEach(p=>{ if(!panels.some(q=>q.id===p.id)) panels.push(p); });
   Object.entries(s.moves||{}).forEach(([id,ll])=>{
     const p=panels.find(x=>x.id===id);
@@ -988,6 +1005,23 @@ window.addEventListener('resize',()=>{
 });
 $('#setup').addEventListener('toggle',()=>setTimeout(()=>map.invalidateSize(),260));
 
+function renderStale(){
+  if(!staleInfo) return;
+  $('#newver').innerHTML='<div class="newver">Données mises à jour '+
+    (staleInfo.maj?'(version du '+esc(staleInfo.maj)+')':'')+
+    '. Vos '+staleInfo.n+' correction'+(staleInfo.n>1?'s':'')+' locale'+(staleInfo.n>1?'s':'')+
+    ', désormais publiée'+(staleInfo.n>1?'s':'')+', '+(staleInfo.n>1?'ont':'a')+
+    ' été effacée'+(staleInfo.n>1?'s':'')+' pour ne plus masquer les données de référence.'+
+    '<br><button id="bUndoStale">Les restaurer quand même</button></div>';
+  saveLocal();                       // fige la nouvelle base, le bandeau ne reviendra pas
+  $('#bUndoStale').onclick=()=>{
+    try{
+      const prev=localStorage.getItem(LS+'-precedent');
+      if(prev){ localStorage.setItem(LS,prev); location.reload(); }
+    }catch(e){}
+  };
+}
+
 /* ---------- init ---------- */
 function panelBounds(){
   const b=L.latLngBounds(panels.map(p=>[p.lat,p.lon]));
@@ -1012,7 +1046,7 @@ fetch('panneaux.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{
   panels=d.panels.slice();
   loadLocal();
   document.querySelectorAll('#srcs button.src').forEach(b=>b.classList.toggle('on',srcOn[b.dataset.s]!==false));
-  drawMarkers(); renderList(); renderAuth(); renderMaj(); syncSetup();
+  drawMarkers(); renderList(); renderAuth(); renderMaj(); syncSetup(); renderStale();
   fitOnce();
   if(isMobile()) sheet(false);
 }).catch(()=>{

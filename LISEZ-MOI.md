@@ -80,6 +80,15 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 Sélection, panneaux ajoutés, positions corrigées, suppressions, filtres, mode et départ sont
 mémorisés dans le navigateur.
 
+**Priorité entre corrections locales et données publiées.** Les corrections faites dans
+l'outil sont des modifications *non encore publiées* : elles s'appliquent par-dessus
+`panneaux.json`. Si une version plus récente du fichier est publiée, c'est que ces
+corrections ont été intégrées — l'outil les écarte donc automatiquement au chargement et
+l'annonce par un bandeau vert, avec un bouton **Les restaurer quand même** si besoin (une
+copie est conservée dans le navigateur). Sans ce mécanisme, une correction locale ancienne
+continuerait de masquer la donnée à jour : un panneau publié comme vérifié resterait grisé
+à l'écran. Les préférences (sélection, mode, départ, filtres) ne sont jamais effacées.
+
 ## D'où viennent les données
 
 **106 emplacements, 120 panneaux physiques**, sur 10 quartiers de Nanterre.
