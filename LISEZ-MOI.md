@@ -86,7 +86,7 @@ mémorisés dans le navigateur.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
-statut daté — 93 confirmés, 10 marqués introuvables. Les emplacements introuvables sont
+statut daté — 94 confirmés, 9 marqués introuvables. Les emplacements introuvables sont
 conservés volontairement : ils restent sélectionnables, à trancher lors d'un prochain
 passage sur le terrain. Les décomptes par source ci-dessous décrivent l'origine des
 données avant vérification.
