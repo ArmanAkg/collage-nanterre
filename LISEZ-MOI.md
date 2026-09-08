@@ -250,12 +250,18 @@ Limite : **95 points maximum** (départ compris), imposée par le serveur de rou
 
 **Attention aux points en impasse pour la voiture.** Un panneau peut être à 100 m à pied
 d'un autre et à 3 km en voiture, si le point s'accroche à une voie que la circulation
-n'atteint que par un long détour. C'est le cas du **n° 95 (rue des Saules)**, sous l'A86 :
-en voiture il s'accroche à 2 m d'une bretelle sans nom plutôt qu'à la rue de Sartrouville
-11 m plus loin, ce qui coûte 1,7 à 3,7 km par trajet. Décaler le point d'une douzaine de
-mètres sur la rue de Sartrouville avec le bouton `✥` ramène la moyenne de 2 686 m à 560 m.
+n'atteint que par un long détour.
+
+Le **n° 95 (rue des Saules)** en a été l'exemple : mal placé, il s'accrochait à 2 m d'une
+bretelle d'autoroute, ce qui coûtait 1,7 à 3,7 km par trajet et faisait remonter
+l'itinéraire jusqu'au nord de la commune. Il est désormais placé sur le passage sous l'A86
+lui-même (`way/27817983`, `tunnel=yes`, entre la rue des Saules et la rue des Grands Prés),
+c'est-à-dire à l'endroit réel des panneaux — et les trajets voiture tombent à **573 m de
+moyenne** au lieu de 2 686 m.
+
 Le réflexe, devant une tournée voiture anormalement longue : retirer les panneaux un par un
-pour identifier le fautif, puis vérifier son accrochage.
+pour identifier le fautif, puis regarder à quelle voie son point s'accroche. Quelques mètres
+de décalage avec le bouton `✥` suffisent en général à corriger.
 
 ## Services externes utilisés
 
