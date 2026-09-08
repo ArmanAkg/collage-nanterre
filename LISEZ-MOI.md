@@ -240,6 +240,13 @@ personne malveillante. Les modifications restent de toute façon locales au navi
 
 Limite : **95 points maximum** (départ compris), imposée par le serveur de routage public.
 
+**Détours signalés.** Quand un tronçon fait plus de 2,5 fois la distance à vol d'oiseau
+(et plus de 200 m), il est marqué en orange dans le détail de l'itinéraire, avec un bandeau
+d'explication. Ce n'est pas un défaut du calcul : c'est le signe qu'un point est mal placé,
+ou qu'une barrière — voie ferrée, autoroute, passage souterrain non cartographié dans
+OpenStreetMap — oblige à contourner. Deux réflexes : vérifier la position du point concerné
+avec le bouton `✥`, et regarder si le passage manquant existe dans OpenStreetMap.
+
 ## Services externes utilisés
 
 Fonds de carte OpenStreetMap, routage OSRM hébergé par FOSSGIS
