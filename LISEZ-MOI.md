@@ -37,6 +37,11 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
    Le marqueur « D » est déplaçable. Sans départ, le 1er panneau sert de départ/arrivée.
 2. **Mode** — à pied / vélo / voiture. Le temps de collage par panneau (4 min par défaut)
    s'ajoute au temps de trajet.
+
+   La case **« Revenir au point de départ »**, cochée par défaut, choisit entre une
+   **boucle** et un **aller simple** qui s'arrête au dernier panneau. L'aller simple est
+   souvent nettement plus court en voiture : l'optimisation place alors en fin de tournée
+   le panneau le plus coûteux à quitter, au lieu de payer l'aller *et* le retour.
 3. **Panneaux** — clic sur un point de la carte ou sur une ligne de la liste pour le
    sélectionner. `tout / rien` sélectionne un quartier entier ; le champ de filtre accepte
    un numéro, un nom de rue ou un quartier. Les boutons `Carte` / `Liste` / `OSM seul`
@@ -238,14 +243,19 @@ personne malveillante. Les modifications restent de toute façon locales au navi
    mais pas prouvée optimale au-delà d'une dizaine de points.
 3. Tracé réel de la boucle (service `route`), découpé par tronçons de 40 points.
 
+En **aller simple**, le coût du retour vers le point de départ est mis à zéro dans la
+matrice : optimiser un cycle revient alors à optimiser un chemin ouvert partant du départ.
+
 Limite : **95 points maximum** (départ compris), imposée par le serveur de routage public.
 
-**Détours signalés.** Quand un tronçon fait plus de 2,5 fois la distance à vol d'oiseau
-(et plus de 200 m), il est marqué en orange dans le détail de l'itinéraire, avec un bandeau
-d'explication. Ce n'est pas un défaut du calcul : c'est le signe qu'un point est mal placé,
-ou qu'une barrière — voie ferrée, autoroute, passage souterrain non cartographié dans
-OpenStreetMap — oblige à contourner. Deux réflexes : vérifier la position du point concerné
-avec le bouton `✥`, et regarder si le passage manquant existe dans OpenStreetMap.
+**Attention aux points en impasse pour la voiture.** Un panneau peut être à 100 m à pied
+d'un autre et à 3 km en voiture, si le point s'accroche à une voie que la circulation
+n'atteint que par un long détour. C'est le cas du **n° 95 (rue des Saules)**, sous l'A86 :
+en voiture il s'accroche à 2 m d'une bretelle sans nom plutôt qu'à la rue de Sartrouville
+11 m plus loin, ce qui coûte 1,7 à 3,7 km par trajet. Décaler le point d'une douzaine de
+mètres sur la rue de Sartrouville avec le bouton `✥` ramène la moyenne de 2 686 m à 560 m.
+Le réflexe, devant une tournée voiture anormalement longue : retirer les panneaux un par un
+pour identifier le fautif, puis vérifier son accrochage.
 
 ## Services externes utilisés
 

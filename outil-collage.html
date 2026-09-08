@@ -61,9 +61,6 @@ input[type=text]{flex:1;min-width:0}
 .newver{background:#e7f2e9;border:1px solid #b9dcc4;border-radius:7px;padding:8px 10px;
   margin:0 0 8px;font-size:12px;line-height:1.4}
 .newver button{margin-top:6px;padding:4px 9px;font-size:11.5px}
-.detourw{background:#fdf0dc;border:1px solid #e9c98d;border-radius:7px;padding:8px 10px;
-  margin:10px 14px 0;font-size:11.5px;line-height:1.4}
-ol.stops .ad.detour{color:var(--warn);font-weight:600}
 .filtw{background:#fff7d6;border:1px solid #f0dfa0;border-radius:7px;padding:7px 9px;margin-top:8px;
   font-size:12px;display:flex;align-items:center;gap:8px}
 .filtw button{margin-left:auto;padding:4px 9px;font-size:11.5px;white-space:nowrap}
@@ -202,6 +199,9 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
         <button data-m="car">🚗 Voiture</button>
       </div>
       <div class="row" style="margin-top:7px">
+        <label class="ck"><input type="checkbox" id="loop" checked> Revenir au point de départ</label>
+      </div>
+      <div class="row" style="margin-top:7px">
         <label class="ck">Temps de collage par panneau
           <input type="number" id="dwell" value="4" min="0" max="60" step="1" style="width:60px"> min
         </label>
@@ -305,7 +305,7 @@ function saveLocal(){
     localStorage.setItem(LS, JSON.stringify({
       custom:panels.filter(p=>p.src==='perso'), moves:mv, srcOn, deleted:[...deleted], verifs:vs,
       base:(DATA&&DATA.version)||0,
-      sel:[...sel], mode, start, startLabel, dwell:$('#dwell').value
+      sel:[...sel], mode, start, startLabel, dwell:$('#dwell').value, loop:$('#loop').checked
     }));
   }catch(e){}
 }
@@ -334,6 +334,7 @@ function loadLocal(){
   Object.entries(s.verifs||{}).forEach(([id,v])=>{ const q=panels.find(x=>x.id===id); if(q) q.v=v; });
   if(s.mode) setMode(s.mode);
   if(s.dwell!=null) $('#dwell').value=s.dwell;
+  if(s.loop!=null) $('#loop').checked=!!s.loop;
   if(s.start) setStart(s.start[0],s.start[1],s.startLabel);
   (s.sel||[]).forEach(id=>{ if(panels.some(p=>p.id===id)) sel.add(id); });
 }
@@ -641,6 +642,7 @@ $('#modes').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(b){ setMode(b.dataset.m); saveLocal(); }
 });
 $('#dwell').addEventListener('change',saveLocal);
+$('#loop').addEventListener('change',()=>{ syncSetup(); saveLocal(); });
 
 /* ---------- départ ---------- */
 function setStart(lat,lon,label){
@@ -808,11 +810,15 @@ $('#bGo').onclick=async()=>{
   $('#bGo').disabled=true; $('#bGo').textContent='Calcul en cours…';
   try{
     const tab=await osrm(cfg.host+'/table/v1/'+cfg.prof+'/'+coordStr(pts)+'?annotations=duration');
+    const boucle=$('#loop').checked;
     const D=tab.durations.map(r=>r.map(v=>(v==null?1e9:v)));
+    // Aller simple : le retour vers le point 0 ne coûte rien, l'optimisation d'un cycle
+    // revient alors à optimiser un chemin ouvert partant du point 0.
+    if(!boucle) for(let i=0;i<D.length;i++) D[i][0]=0;
     let tour=improve(nearestTour(D,pts.length),D,3000);
     const z=tour.indexOf(0); tour=tour.slice(z).concat(tour.slice(0,z));
 
-    const ordered=tour.map(i=>pts[i]); ordered.push(pts[tour[0]]);
+    const ordered=tour.map(i=>pts[i]); if(boucle) ordered.push(pts[tour[0]]);
     let coords=[], dist=0, dur=0, legs=[];
     for(let s=0;s<ordered.length-1;s+=39){
       const chunk=ordered.slice(s,Math.min(s+40,ordered.length));
@@ -838,7 +844,7 @@ $('#bGo').onclick=async()=>{
                 :{padding:[30,30]});
 
     const dwell=(+$('#dwell').value||0)*60*chosen.length;
-    lastRoute={coords,tour,pts,labels,dist,dur,legs};
+    lastRoute={coords,tour,pts,labels,dist,dur,legs,boucle};
 
     let h='<div class="kpi">'+
       '<div><b>'+fmtKm(dist)+'</b><span>Distance</span></div>'+
@@ -848,26 +854,15 @@ $('#bGo').onclick=async()=>{
         '<button id="bGpx">⤓ GPX</button>'+
         '<button id="bTxt">⤓ Feuille de route</button>'+
         '<button id="bGmap">🗺 Google Maps</button></div>'+
-        '<p class="note">Ordre optimisé pour minimiser le temps total, boucle fermée sur le départ.</p></div>'+
+        '<p class="note">Ordre optimisé pour minimiser le temps total, '+
+        (boucle?'boucle fermée sur le départ.':'aller simple : la tournée s’arrête au dernier panneau.')+'</p></div>'+
       '<ol class="stops">';
-    let nDetours=0;
     tour.forEach((idx,k)=>{
       const L0=labels[idx], leg=legs[k];
-      const a=pts[idx], b=pts[tour[(k+1)%tour.length]];
-      const vol=metres(a[0],a[1],b[0],b[1]);
-      const detour = leg && vol>60 && leg.d/vol>2.5 && leg.d>200;
-      if(detour) nDetours++;
       h+='<li><b>'+esc(L0.a)+'</b>'+(L0.id!=='D'?' <span class="ad">(n° '+esc(L0.id)+(L0.nb>1?' — '+L0.nb+' panneaux':'')+')</span>':'')+
-         (leg?'<div class="ad'+(detour?' detour':'')+'">↳ '+fmtKm(leg.d)+' · '+fmtMin(leg.t)+
-              (detour?' — détour : '+Math.round(vol)+' m à vol d’oiseau seulement':'')+'</div>':'')+
-         '</li>';
+         (leg?'<div class="ad">↳ '+fmtKm(leg.d)+' · '+fmtMin(leg.t)+'</div>':'')+'</li>';
     });
-    if(nDetours) h=h.replace('<ol class="stops">',
-      '<div class="detourw">'+nDetours+' tronçon'+(nDetours>1?'s sont':' est')+
-      ' beaucoup plus long'+(nDetours>1?'s':'')+' que la distance directe. En général : un point mal placé, ou une '+
-      'barrière (voie ferrée, autoroute, passage non cartographié) que le calcul doit contourner. '+
-      'Les tronçons concernés sont signalés en orange ci-dessous.</div><ol class="stops">');
-    h+='<li><b>Retour — '+esc(labels[tour[0]].a)+'</b></li></ol>';
+    h+=(boucle?'<li><b>Retour — '+esc(labels[tour[0]].a)+'</b></li>':'')+'</ol>';
     $('#res').innerHTML=h;
     $('#bGpx').onclick=exportGpx; $('#bTxt').onclick=exportTxt; $('#bGmap').onclick=openGmaps;
     syncGrab();
@@ -967,18 +962,18 @@ function exportGpx(){
 }
 function exportTxt(){
   const r=lastRoute; if(!r) return;
-  let t='TOURNÉE COLLAGE — Nanterre\nMode : '+OSRM[mode].label+'\n'+
+  let t='TOURNÉE COLLAGE — Nanterre\nMode : '+OSRM[mode].label+(r.boucle?' (boucle)':' (aller simple)')+'\n'+
         'Distance : '+fmtKm(r.dist)+' — Trajet : '+fmtMin(r.dur)+'\n\n';
   r.tour.forEach((idx,k)=>{
     const l=r.labels[idx];
     t+=String(k+1).padStart(2,' ')+'. '+l.a+(l.id!=='D'?'  (n° '+l.id+(l.nb>1?' — '+l.nb+' panneaux':'')+')':'')+'\n';
   });
-  t+='    ↩ retour au point de départ\n';
+  if(r.boucle) t+='    ↩ retour au point de départ\n';
   dl('tournee-collage.txt',t);
 }
 function openGmaps(){
   const r=lastRoute; if(!r) return;
-  const pts=r.tour.map(i=>r.pts[i]); pts.push(pts[0]);
+  const pts=r.tour.map(i=>r.pts[i]); if(r.boucle) pts.push(pts[0]);
   if(pts.length>10) alert('Google Maps est limité à ~10 étapes : seules les 10 premières sont transmises.');
   const p=pts.slice(0,10).map(c=>c[0].toFixed(6)+','+c[1].toFixed(6));
   const tm={foot:'walking',bike:'bicycling',car:'driving'}[mode];
@@ -1002,7 +997,8 @@ function syncSetup(){
   const el=$('#setup');
   if(!el.dataset.init){ el.dataset.init='1'; el.open=!m; }
   const lbl={foot:'à pied',bike:'à vélo',car:'en voiture'}[mode];
-  $('#setupTxt').textContent = (start? (startLabel||'départ défini') : 'sans départ fixé')+' · '+lbl;
+  const bcl=$('#loop').checked?'boucle':'aller simple';
+  $('#setupTxt').textContent = (start? (startLabel||'départ défini') : 'sans départ fixé')+' · '+lbl+' · '+bcl;
 }
 function syncGrab(){
   if(!isMobile()) return;
