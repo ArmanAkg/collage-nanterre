@@ -191,7 +191,13 @@ L'outil est prévu pour être utilisé sur le terrain, téléphone en main :
 - le réglage départ + mode est lui aussi replié en une ligne de résumé
   (`Hôtel de ville · à vélo`), pour laisser la place à la liste ;
 - cibles tactiles agrandies, champs en 16 px pour éviter le zoom automatique d'iOS,
-  hauteur en `dvh` pour ne pas être coupé par la barre d'adresse.
+  hauteur en `dvh` pour ne pas être coupé par la barre d'adresse ;
+- **toute la feuille défile**, pas seulement la liste des panneaux. Sur ordinateur le
+  panneau latéral est fixe et seule la liste défile ; sur téléphone cela rendait
+  inaccessibles les champs situés sous une section dépliée — avec le volet réservé ouvert,
+  la liste tombait à 14 px de haut et les boutons d'export se retrouvaient à 150 px sous
+  le bas de l'écran, sans moyen d'y accéder. La barre de résumé reste collée en haut et le
+  bouton de calcul en bas pendant le défilement.
 
 Ajouter l'adresse à l'écran d'accueil du téléphone donne un accès en un geste.
 
