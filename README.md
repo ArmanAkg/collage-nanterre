@@ -20,8 +20,8 @@ que sur cette adresse en `https`, pas sur un fichier ouvert en local.
 - Export **GPX** (montre GPS, OsmAnd, Komoot), **feuille de route** à imprimer, ouverture
   dans **Google Maps**.
 
-**108 emplacements, 122 panneaux**, sur 10 quartiers de Nanterre. 106 sont vérifiés
-(98 confirmés, 8 marqués introuvables mais conservés dans la liste) ; 2 viennent d'une
+**110 emplacements, 124 panneaux**, sur 10 quartiers de Nanterre. 108 sont vérifiés
+(101 confirmés, 7 marqués introuvables mais conservés dans la liste) ; 2 viennent d'une
 carte tierce et restent à vérifier sur place.
 
 ## Modifier les panneaux

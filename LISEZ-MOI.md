@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 108 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `panneaux.json` | les 110 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
 | `panneaux_suppélementaires.txt` | la liste d'adresses d'origine |
@@ -96,7 +96,7 @@ continuerait de masquer la donnée à jour : un panneau publié comme vérifié 
 
 ## D'où viennent les données
 
-**108 emplacements, 122 panneaux physiques**, sur 10 quartiers de Nanterre.
+**110 emplacements, 124 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
@@ -121,11 +121,15 @@ Cinq sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM 
   traité jusqu'ici. Étiquetés `hors carte` dans la liste.
 - **`Framacarte` — 2 emplacements** (n° 124 et 125) : `8 Rue Jacques Decour` et
   `56 Rue Abdelmalek Sayad`. Étiquetés `framacarte`, **non vérifiés**, à contrôler sur place.
-- **`Terrain` — 5 emplacements** relevés directement sur place, étiquetés `terrain` et
+- **`Terrain` — 7 emplacements** relevés directement sur place, étiquetés `terrain` et
   confirmés d'office : `126` croisement rue de Metz / rue Buffon, `127` 8 Résidence des
-  Glycines, `128` 9 Allée des Ajoncs, `129` rue du 11 Novembre 1918, et `123`
-  5 Résidence des Jonquilles — ce dernier remplaçant le point framacarte
-  « 3 Résidence des Iris », déplacé de 87 m après relevé.
+  Glycines, `128` 9 Allée des Ajoncs, `129` rue du 11 Novembre 1918, `130` rue des
+  Pâquerettes, `131` 1 rue du 1er Mai, et `123` 5 Résidence des Jonquilles — ce dernier
+  remplaçant le point framacarte « 3 Résidence des Iris », déplacé de 87 m après relevé.
+
+Le **n° 112** (17 allée Etienne Cabet), marqué introuvable le 4 septembre, a été retrouvé
+le 30 septembre à 11 m de sa position enregistrée : position corrigée et statut repassé à
+confirmé, plutôt que de créer un doublon.
 
 **Emplacements exclus définitivement.** Le champ `exclus` de `panneaux.json` conserve les
 points dont l'absence a été constatée sur le terrain, avec leurs coordonnées et la date.
