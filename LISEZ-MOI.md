@@ -96,7 +96,7 @@ continuerait de masquer la donnée à jour : un panneau publié comme vérifié 
 
 ## D'où viennent les données
 
-**110 emplacements, 124 panneaux physiques**, sur 10 quartiers de Nanterre.
+**110 emplacements, 123 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
@@ -121,10 +121,12 @@ Cinq sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM 
   traité jusqu'ici. Étiquetés `hors carte` dans la liste.
 - **`Framacarte` — 2 emplacements** (n° 124 et 125) : `8 Rue Jacques Decour` et
   `56 Rue Abdelmalek Sayad`. Étiquetés `framacarte`, **non vérifiés**, à contrôler sur place.
-- **`Terrain` — 7 emplacements** relevés directement sur place, étiquetés `terrain` et
+- **`Terrain` — 8 emplacements** relevés directement sur place, étiquetés `terrain` et
   confirmés d'office : `126` croisement rue de Metz / rue Buffon, `127` 8 Résidence des
   Glycines, `128` 9 Allée des Ajoncs, `129` rue du 11 Novembre 1918, `130` rue des
-  Pâquerettes, `131` 1 rue du 1er Mai, et `123` 5 Résidence des Jonquilles — ce dernier
+  Pâquerettes, `131` 1 rue du 1er Mai, `132` 5 avenue Vladimir Ilitch Lénine — qui remplace
+  l'ancien n° 47, doublon dont le point tombait 79 m plus loin, sur la rue Gambetta —, et
+  `123` 5 Résidence des Jonquilles — ce dernier
   remplaçant le point framacarte « 3 Résidence des Iris », déplacé de 87 m après relevé.
 
 Le **n° 112** (17 allée Etienne Cabet), marqué introuvable le 4 septembre, a été retrouvé
