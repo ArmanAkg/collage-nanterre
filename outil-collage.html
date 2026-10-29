@@ -110,6 +110,8 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
      display:grid;place-items:center;font-size:11px;font-weight:800;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .startpin{background:var(--violet);color:#fff;border:2px solid #fff;border-radius:50%;
      display:grid;place-items:center;box-shadow:0 2px 6px rgba(28,21,48,.5);font-size:12px;font-weight:800;line-height:1}
+.blbl{text-align:center;font-size:18px;font-weight:900;font-style:italic;line-height:24px;opacity:.75;
+      text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;pointer-events:none}
 #grab{display:none}
 
 /* ---------- téléphone / tablette ---------- */
@@ -1107,6 +1109,20 @@ function renderStale(){
   };
 }
 
+/* ---------- limites des boucles (zones.json, repris de l'outil Tractage) ---------- */
+/* Contours seulement, non cliquables : les clics sur la carte servent au départ et aux ajouts. */
+function drawBoucles(Z){
+  const bc={}; (DATA.boucles||[]).forEach(b=>bc[b.id]=b.c);
+  Z.zones.forEach(z=>{
+    L.polygon(z.poly,{color:'#4c0297',weight:2,opacity:.55,dashArray:'6 5',
+      fillColor:bc[z.id]||'#4c0297',fillOpacity:.06,interactive:false}).addTo(map);
+    if(z.label) L.marker(z.label,{interactive:false,keyboard:false,zIndexOffset:-1000,
+      icon:L.divIcon({className:'',iconSize:[60,24],iconAnchor:[30,12],
+        html:'<div class="blbl" style="color:'+(bc[z.id]||'#4c0297')+'">'+esc(z.id)+'</div>'})}).addTo(map);
+  });
+  L.polygon(Z.ville,{color:'#4c0297',weight:3,opacity:.8,fill:false,interactive:false}).addTo(map);
+}
+
 /* ---------- init ---------- */
 function panelBounds(){
   const b=L.latLngBounds(panels.map(p=>[p.lat,p.lon]));
@@ -1134,6 +1150,7 @@ fetch('panneaux.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{
   drawMarkers(); renderList(); renderAuth(); renderMaj(); syncSetup(); renderStale();
   fitOnce();
   if(isMobile()) sheet(false);
+  fetch('zones.json',{cache:'no-cache'}).then(r=>r.json()).then(drawBoucles).catch(()=>{});
 }).catch(()=>{
   $('#err').innerHTML='<p class="err">Impossible de charger <code>panneaux.json</code>. '+
     'Ouvrez la page via un serveur local (voir LISEZ-MOI.md), pas par double-clic.</p>';

@@ -25,6 +25,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
 | `panneaux.json` | les 110 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `zones.json` | contours des 6 boucles des groupes Telegram et de la ville, copiés de l'outil Tractage ; tracés en pointillés sur la carte |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
 | `panneaux_suppélementaires.txt` | la liste d'adresses d'origine |
@@ -180,7 +181,10 @@ panneau. Un suffixe `(1)`, `(2)` distingue deux emplacements distincts partagean
 adresse la plus proche.
 
 Les **quartiers** sont les 11 quartiers officiels de Nanterre (limites administratives
-OSM, `admin_level=10`). La pastille de couleur à côté des adresses issues de la carte
+OSM, `admin_level=10`). Ils sont regroupés en **6 boucles**, celles des groupes Telegram
+(champ `boucles` de `panneaux.json`) : chaque boucle a sa teinte, déclinée en nuances
+proches pour ses quartiers (champ `qcol`), et la liste suit l'ordre des boucles. La
+pastille de couleur à côté des adresses issues de la carte
 rappelle la couleur du panneau sur la carte d'origine.
 
 Le calque « Carte d'origine » permet de vérifier chaque point contre la carte de départ.

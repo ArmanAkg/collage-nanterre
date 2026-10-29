@@ -1,6 +1,7 @@
 {
  "bounds": [[48.87644, 2.17184], [48.906305, 2.236085]],
- "qcol": {"Chemin de l'Île": "#e8a33d", "Petit-Nanterre": "#c96be6", "Université": "#e0463c", "République": "#d4762a", "Centre": "#2f8f6b", "Vieux-Pont – Sainte-Geneviève": "#3a63f0", "Plateau – Mont-Valérien": "#3fb0c8", "La Boule – Champs-Pierreux": "#7a4fd0", "Parc Nord": "#8a8f2b", "Parc Sud": "#4bab4b", "Les Groues": "#8a6a4a"},
+ "qcol": {"Chemin de l'Île": "#e07b00", "Université": "#1f5fbf", "République": "#5b8fe0", "Centre": "#1d8a5a", "Vieux-Pont – Sainte-Geneviève": "#52b27f", "Parc Sud": "#8e1f5e", "Parc Nord": "#b8327a", "La Boule – Champs-Pierreux": "#d65c9b", "Les Groues": "#e88bbb", "Plateau – Mont-Valérien": "#9a6b2f", "Petit-Nanterre": "#12838d"},
+ "boucles": [{"id": "CI", "nom": "Chemin de l'Île", "c": "#e07b00", "quartiers": ["Chemin de l'Île"]}, {"id": "UR", "nom": "Université / République", "c": "#1f5fbf", "quartiers": ["Université", "République"]}, {"id": "CVP", "nom": "Centre / Vieux-Pont", "c": "#1d8a5a", "quartiers": ["Centre", "Vieux-Pont – Sainte-Geneviève"]}, {"id": "PSN", "nom": "Parc Sud / Parc Nord", "c": "#b8327a", "quartiers": ["Parc Sud", "Parc Nord", "La Boule – Champs-Pierreux", "Les Groues"]}, {"id": "MV", "nom": "Mont-Valérien", "c": "#9a6b2f", "quartiers": ["Plateau – Mont-Valérien"]}, {"id": "PN", "nom": "Petit-Nanterre", "c": "#12838d", "quartiers": ["Petit-Nanterre"]}],
  "snapMax": 70,
  "osmTotal": 92,
  "osmMatched": 79,
