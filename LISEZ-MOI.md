@@ -28,6 +28,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
 | `panneaux_suppélementaires.txt` | la liste d'adresses d'origine |
+| `img/logo.png` | logo du pôle collage, repris des visuels Telegram (`visus/logos_telegram/bandeau`), réduit à 128 px ; `img/icone-180.png`, le même sur fond blanc, sert d'icône sur l'écran d'accueil du téléphone |
 | `index.html` | redirection vers l'outil, pour l'adresse racine du site |
 | `README.md` | présentation du dépôt et procédure de publication |
 
@@ -79,8 +80,10 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
    que vous avez ajouté vous-même est supprimé définitivement.
 8. **Calculer** — trace la boucle, numérote les arrêts dans l'ordre, et affiche
    distance / durée / durée avec collage, puis le détail arrêt par arrêt.
-9. **Exports** — GPX (montre GPS, OsmAnd, Komoot…), feuille de route texte à imprimer,
-   ouverture dans Google Maps (limité à 10 étapes par Google).
+9. **Exports** — GPX (montre GPS, OsmAnd, Komoot…), **feuille de route** à imprimer
+   (s'ouvre dans un nouvel onglet ; son bouton « Imprimer » donne aussi un PDF ; une case
+   à cocher par emplacement pour suivre la tournée sur papier), ouverture dans Google Maps
+   (limité à 10 étapes par Google).
 
 Sélection, panneaux ajoutés, positions corrigées, suppressions, filtres, mode et départ sont
 mémorisés dans le navigateur.

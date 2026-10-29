@@ -3,34 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#e2001a">
+<meta name="theme-color" content="#4c0297">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Collage Nanterre — itinéraire panneaux libres</title>
+<link rel="icon" href="img/logo.png">
+<link rel="apple-touch-icon" href="img/icone-180.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,700;1,800;1,900&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <style>
+/* couleurs des visuels Telegram, les mêmes que l'outil Tractage */
 :root{
-  --bg:#f6f6f4; --panel:#fff; --ink:#16181d; --muted:#6b7280; --line:#e3e5e9;
-  --accent:#e2001a; --accent-ink:#fff; --warn:#b45309;
+  --violet:#4c0297; --rouge:#d1271c; --lavande:#eadff7;
+  --bg:#f7f5fb; --panel:#fff; --ink:#1c1530; --muted:#6b6480; --line:#e9e4f2;
+  --accent:var(--violet); --accent-ink:#fff; --warn:#b45309; --hover:#f3eff9;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+body{font:14px/1.45 "Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+.titre{font-weight:900;font-style:italic;color:var(--violet);text-shadow:2px 2px 0 var(--rouge);letter-spacing:-.3px}
 #app{display:flex;height:100vh;overflow:hidden}
 #side{width:410px;min-width:350px;background:var(--panel);border-right:1px solid var(--line);
       display:flex;flex-direction:column;overflow:hidden}
 #map{flex:1;min-width:0}
-header{padding:12px 14px;border-bottom:1px solid var(--line)}
-header h1{margin:0;font-size:15px;letter-spacing:.2px}
-header p{margin:3px 0 0;font-size:12px;color:var(--muted)}
+header{display:flex;align-items:center;gap:12px;padding:14px 14px 11px;border-bottom:1px solid var(--line)}
+header>img{width:52px;height:52px;flex:none}
+header .hd{min-width:0;flex:1}
+header h1{margin:0;font-size:28px;line-height:1}
+header p{margin:4px 0 0;font-size:12px;color:var(--muted)}
 .sec{padding:11px 14px;border-bottom:1px solid var(--line)}
-.sec h2{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:600}
+.sec h2{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--violet);font-weight:800}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-button{font:inherit;padding:7px 11px;border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;color:var(--ink)}
-button:hover{background:#f0f0ee}
-button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
-button.primary:hover{filter:brightness(1.08)}
-button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+button{font:inherit;padding:7px 11px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;color:var(--ink)}
+button:hover{background:var(--hover)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+button.primary:hover{filter:brightness(1.15)}
+button.on{background:var(--violet);color:#fff;border-color:var(--violet)}
 button.unlocked{background:var(--warn);color:#fff;border-color:var(--warn)}
 button:disabled{opacity:.5;cursor:not-allowed}
 .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;width:100%}
@@ -46,8 +55,8 @@ input[type=text]{flex:1;min-width:0}
 .grp .n{font-weight:500;text-transform:none;letter-spacing:0}
 .grp button{margin-left:auto;padding:2px 7px;font-size:11px;text-transform:none;letter-spacing:0}
 .it{display:flex;align-items:center;gap:9px;padding:5px 14px;cursor:pointer}
-.it:hover{background:#f3f4f6}
-.it.sel{background:#fdeaec}
+.it:hover{background:var(--hover)}
+.it.sel{background:var(--lavande)}
 .it .num{width:26px;height:22px;border-radius:6px;flex:none;display:grid;place-items:center;
          font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.3)}
 .it .tx{min-width:0;flex:1}
@@ -73,32 +82,34 @@ input[type=text]{flex:1;min-width:0}
 .tagfr{font-size:9.5px;background:#e8eef0;color:#3d6070;border-radius:4px;padding:0 4px;font-weight:700}
 .tagte{font-size:9.5px;background:#e7f2e9;color:#137a3f;border-radius:4px;padding:0 4px;font-weight:700}
 #maj{color:var(--muted)}
-#res{flex:none;border-top:1px solid var(--line);max-height:44vh;overflow:auto;background:#fbfbfa}
+#res{flex:none;border-top:1px solid var(--line);max-height:44vh;overflow:auto;background:var(--bg)}
 .kpi{display:flex;border-bottom:1px solid var(--line)}
 .kpi div{flex:1;padding:9px 12px;text-align:center}
 .kpi div+div{border-left:1px solid var(--line)}
-.kpi b{display:block;font-size:17px}
+.kpi b{display:block;font-size:20px;font-weight:900;font-style:italic;color:var(--violet)}
 .kpi span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 ol.stops{margin:0;padding:6px 14px 12px 34px;font-size:12.5px}
 ol.stops li{padding:2px 0}
 ol.stops .ad{color:var(--muted);font-size:11.5px}
+.exp{margin-top:6px;flex-wrap:nowrap}
+.exp button{flex:1;padding:6px 4px;font-size:12.5px;white-space:nowrap}
 .note{font-size:11.5px;color:var(--muted);margin:6px 0 0}
-.err{color:#b00020;font-size:12.5px;margin:6px 0 0}
+.err{color:var(--rouge);font-size:12.5px;margin:6px 0 0}
 .hint{background:#fff7d6;border:1px solid #f0dfa0;padding:7px 9px;border-radius:7px;font-size:12px;margin-top:7px}
 .hint.warn{background:#fdf0dc;border-color:#e9c98d}
 label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
-.badge{background:var(--ink);color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;font-weight:700}
-.leaflet-container{background:#e9e9e7}
+.badge{background:var(--violet);color:#fff;border-radius:999px;padding:1px 7px;font-size:11px;font-weight:700}
+.leaflet-container{background:#f4f2f7;font-family:inherit}
 .pin{border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45);display:grid;place-items:center;
-     font:700 10px/1 system-ui;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.4)}
-.pin.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(226,0,26,.35),0 1px 4px rgba(0,0,0,.45)}
+     font-size:10px;font-weight:700;line-height:1;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.4)}
+.pin.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(76,2,151,.4),0 1px 4px rgba(0,0,0,.45)}
 .pin.mv{border-color:var(--warn);border-style:dashed}
 .pin.vok{box-shadow:0 0 0 2px #137a3f,0 1px 4px rgba(0,0,0,.45)}
 .pin.vko{opacity:.45}
-.ordbadge{background:var(--accent);color:#fff;border:2px solid #fff;border-radius:50%;
-     display:grid;place-items:center;font:700 11px/1 system-ui;box-shadow:0 1px 4px rgba(0,0,0,.4)}
-.startpin{background:#111;color:#fff;border:2px solid #fff;border-radius:50%;
-     display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.5);font:700 12px/1 system-ui}
+.ordbadge{background:var(--rouge);color:#fff;border:2px solid #fff;border-radius:50%;
+     display:grid;place-items:center;font-size:11px;font-weight:800;line-height:1;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.startpin{background:var(--violet);color:#fff;border:2px solid #fff;border-radius:50%;
+     display:grid;place-items:center;box-shadow:0 2px 6px rgba(28,21,48,.5);font-size:12px;font-weight:800;line-height:1}
 #grab{display:none}
 
 /* ---------- téléphone / tablette ---------- */
@@ -108,7 +119,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
   #map{position:absolute;inset:0;height:100%;width:100%}
   #side{position:absolute;left:0;right:0;bottom:0;top:auto;width:auto;min-width:0;
         height:74dvh;max-height:74dvh;border-right:0;border-top:1px solid var(--line);
-        border-radius:16px 16px 0 0;box-shadow:0 -8px 28px rgba(0,0,0,.22);
+        border-radius:16px 16px 0 0;box-shadow:0 -8px 28px rgba(28,21,48,.25);
         transition:transform .28s cubic-bezier(.32,.72,0,1);z-index:1100;
         padding-bottom:env(safe-area-inset-bottom)}
   #side.collapsed{transform:translateY(calc(100% - var(--grabH,58px)))}
@@ -116,11 +127,12 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
         border-bottom:1px solid var(--line);background:var(--panel);
         border-radius:16px 16px 0 0;flex:none;touch-action:manipulation}
   #grab::before{content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);
-        width:38px;height:4px;border-radius:2px;background:#d3d5da}
+        width:38px;height:4px;border-radius:2px;background:#d7d0e4}
   #grab{position:relative;padding-top:14px}
   #grabBtn{flex:1;text-align:left;border:0;background:0;padding:6px 2px;font-weight:600;
         display:flex;align-items:center;gap:8px;font-size:13.5px}
-  #chev{transition:transform .28s;font-size:12px;color:var(--muted)}
+  #grabBtn img{width:30px;height:30px;flex:none}
+  #chev{margin-left:auto;transition:transform .28s;font-size:12px;color:var(--muted)}
   #side.collapsed #chev{transform:rotate(180deg)}
   #grabGo{padding:8px 14px;font-size:13px}
   header{padding:10px 14px}
@@ -152,7 +164,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
   .leaflet-bottom{bottom:calc(var(--grabH,58px) - 4px)}
   header p{font-size:11.5px}
   #admin{margin-top:7px}
-  header h1{display:none}
+  header h1,header>img{display:none}
   header{padding:8px 14px 6px}
   #setup>summary{display:flex;align-items:center;gap:6px;cursor:pointer;list-style:none;
     padding:11px 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;
@@ -173,14 +185,17 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
   <div id="side">
     <div id="grab">
       <button id="grabBtn" aria-label="Ouvrir ou fermer le panneau">
-        <span id="chev">▾</span><span id="grabTxt">Panneaux</span>
+        <img src="img/logo.png" alt=""><span id="grabTxt">Panneaux</span><span id="chev">▾</span>
       </button>
       <button id="grabGo" class="primary">Calculer</button>
     </div>
     <header>
-      <h1>Collage — panneaux d'affichage libre, Nanterre</h1>
-      <div id="newver"></div>
-      <p><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span><span id="nbp"></span><span id="maj"></span></p>
+      <img src="img/logo.png" alt="">
+      <div class="hd">
+        <h1 class="titre">Collage</h1>
+        <div id="newver"></div>
+        <p><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span><span id="nbp"></span><span id="maj"></span></p>
+      </div>
     </header>
 
     <details id="setup" open>
@@ -264,6 +279,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
         <button class="primary" id="bGo" style="flex:1">🧮 Calculer l'itinéraire optimal</button>
         <button id="bClear">Effacer</button>
       </div>
+      <div id="exp"></div>
       <div id="err"></div>
     </div>
 
@@ -372,7 +388,7 @@ function quartierOf(lat,lon){
 }
 
 /* ---------- couleurs / groupes ---------- */
-const qcol=q=>(DATA.qcol&&DATA.qcol[q])||(q===PERSO?'#e2001a':'#8a8a8a');
+const qcol=q=>(DATA.qcol&&DATA.qcol[q])||(q===PERSO?'#d1271c':'#8a8a8a');
 function groupsInOrder(){
   const names=[...new Set(panels.map(p=>p.q||'Quartier non déterminé'))];
   const ref=Object.keys(DATA.qcol||{});
@@ -808,7 +824,7 @@ async function osrm(url){
 const coordStr=pts=>pts.map(p=>p[1].toFixed(6)+','+p[0].toFixed(6)).join(';');
 
 $('#bGo').onclick=async()=>{
-  $('#err').innerHTML=''; $('#res').innerHTML='';
+  $('#err').innerHTML=''; $('#res').innerHTML=''; $('#exp').innerHTML='';
   const chosen=panels.filter(p=>sel.has(p.id)&&visible(p));
   const pts=[], labels=[];
   if(start){ pts.push(start); labels.push({id:'D',a:startLabel||'point de départ'}); }
@@ -844,7 +860,7 @@ $('#bGo').onclick=async()=>{
     if(ordLayer)   map.removeLayer(ordLayer);
     routeLayer=L.layerGroup([
       L.polyline(coords,{color:'#fff',weight:9,opacity:.85}),
-      L.polyline(coords,{color:'#e2001a',weight:4.5,opacity:.95})
+      L.polyline(coords,{color:'#d1271c',weight:4.5,opacity:.95})
     ]).addTo(map);
     ordLayer=L.layerGroup(tour.map((idx,k)=>L.marker(pts[idx],{zIndexOffset:900,interactive:false,
       icon:L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],
@@ -854,17 +870,13 @@ $('#bGo').onclick=async()=>{
                 :{padding:[30,30]});
 
     const dwell=(+$('#dwell').value||0)*60*chosen.length;
-    lastRoute={coords,tour,pts,labels,dist,dur,legs,boucle};
+    lastRoute={coords,tour,pts,labels,dist,dur,legs,boucle,dwell};
 
     let h='<div class="kpi">'+
       '<div><b>'+fmtKm(dist)+'</b><span>Distance</span></div>'+
       '<div><b>'+fmtMin(dur)+'</b><span>Trajet '+cfg.label+'</span></div>'+
       '<div><b>'+fmtMin(dur+dwell)+'</b><span>Avec collage</span></div></div>'+
-      '<div class="sec"><div class="row">'+
-        '<button id="bGpx">⤓ GPX</button>'+
-        '<button id="bTxt">⤓ Feuille de route</button>'+
-        '<button id="bGmap">🗺 Google Maps</button></div>'+
-        '<p class="note">Ordre optimisé pour minimiser le temps total, '+
+      '<div class="sec"><p class="note" style="margin:0">Ordre optimisé pour minimiser le temps total, '+
         (boucle?'boucle fermée sur le départ.':'aller simple : la tournée s’arrête au dernier panneau.')+'</p></div>'+
       '<ol class="stops">';
     tour.forEach((idx,k)=>{
@@ -874,7 +886,12 @@ $('#bGo').onclick=async()=>{
     });
     h+=(boucle?'<li><b>Retour — '+esc(labels[tour[0]].a)+'</b></li>':'')+'</ol>';
     $('#res').innerHTML=h;
-    $('#bGpx').onclick=exportGpx; $('#bTxt').onclick=exportTxt; $('#bGmap').onclick=openGmaps;
+    /* exports dans la barre du bas, toujours visible : pas besoin de faire défiler les résultats */
+    $('#exp').innerHTML='<div class="row exp">'+
+      '<button id="bGpx">⤓ GPX</button>'+
+      '<button id="bPrint">🖨 Feuille de route</button>'+
+      '<button id="bGmap">🗺 Google Maps</button></div>';
+    $('#bGpx').onclick=exportGpx; $('#bPrint').onclick=printRoute; $('#bGmap').onclick=openGmaps;
     syncGrab();
     if(isMobile()){ sheet(false); }
     else { $('#res').scrollTop=0; }
@@ -887,7 +904,7 @@ $('#bGo').onclick=async()=>{
 $('#bClear').onclick=()=>{
   if(routeLayer){ map.removeLayer(routeLayer); routeLayer=null; }
   if(ordLayer){ map.removeLayer(ordLayer); ordLayer=null; }
-  $('#res').innerHTML=''; $('#err').innerHTML=''; lastRoute=null; syncGrab();
+  $('#res').innerHTML=''; $('#exp').innerHTML=''; $('#err').innerHTML=''; lastRoute=null; syncGrab();
 };
 
 /* ---------- export / import de panneaux.json ---------- */
@@ -904,7 +921,7 @@ function buildData(){
   const out=panels.filter(p=>!deleted.has(p.id)).map(p=>{
     const q={...p};
     q.lat0=q.lat; q.lon0=q.lon;            // la position corrigée devient la référence
-    if(q.src==='perso'){ q.src='local'; q.c=q.c||'#e2001a'; }
+    if(q.src==='perso'){ q.src='local'; q.c=q.c||'#d1271c'; }
     return q;
   });
   out.sort((a,b)=>{
@@ -970,16 +987,63 @@ function exportGpx(){
   g+='</trkseg></trk>\n</gpx>';
   dl('tournee-collage.gpx',g,'application/gpx+xml');
 }
-function exportTxt(){
+/* Feuille de route à imprimer, aux couleurs des visuels : ouverte dans un nouvel onglet,
+   le bouton « Imprimer » donne aussi le PDF. */
+function printRoute(){
   const r=lastRoute; if(!r) return;
-  let t='TOURNÉE COLLAGE — Nanterre\nMode : '+OSRM[mode].label+(r.boucle?' (boucle)':' (aller simple)')+'\n'+
-        'Distance : '+fmtKm(r.dist)+' — Trajet : '+fmtMin(r.dur)+'\n\n';
+  const nb=r.tour.reduce((a,i)=>a+(r.labels[i].id!=='D'?(r.labels[i].nb||1):0),0);
+  const jour=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  let li='';
   r.tour.forEach((idx,k)=>{
-    const l=r.labels[idx];
-    t+=String(k+1).padStart(2,' ')+'. '+l.a+(l.id!=='D'?'  (n° '+l.id+(l.nb>1?' — '+l.nb+' panneaux':'')+')':'')+'\n';
+    const l=r.labels[idx], leg=r.legs[k];
+    li+='<li'+(l.id==='D'?' class="dep"':'')+'><span class="n">'+(k+1)+'</span><div class="tx"><b>'+esc(l.a)+'</b>'+
+        (l.id!=='D'?'<span class="m">n° '+esc(l.id)+(l.nb>1?' — '+l.nb+' panneaux':'')+'</span>':'<span class="m">départ</span>')+
+        (leg?'<span class="lg">↳ '+fmtKm(leg.d)+' · '+fmtMin(leg.t)+'</span>':'')+
+        '</div>'+(l.id!=='D'?'<span class="ck"></span>':'')+'</li>';
   });
-  if(r.boucle) t+='    ↩ retour au point de départ\n';
-  dl('tournee-collage.txt',t);
+  if(r.boucle) li+='<li class="ret"><span class="n">↩</span><div class="tx"><b>Retour — '+esc(r.labels[r.tour[0]].a)+'</b></div></li>';
+  const html='<!doctype html><html lang="fr"><head><meta charset="utf-8">'+
+    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
+    '<base href="'+esc(location.href.split('#')[0])+'"><title>Tournée collage — Nanterre</title>'+
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,700;1,800;1,900&display=swap">'+
+    '<style>'+
+    ':root{--violet:#4c0297;--rouge:#d1271c;--lavande:#eadff7;--ink:#1c1530;--muted:#6b6480;--line:#e9e4f2}'+
+    '*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+    'body{margin:0;padding:24px 16px 40px;font:14px/1.45 "Public Sans",system-ui,sans-serif;color:var(--ink);background:#fff}'+
+    'main{max-width:720px;margin:0 auto}'+
+    'header{display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:3px solid var(--rouge)}'+
+    'header img{width:64px;height:64px;flex:none}'+
+    'h1{margin:0;font-size:32px;line-height:1;font-weight:900;font-style:italic;color:var(--violet);text-shadow:2px 2px 0 var(--rouge);letter-spacing:-.3px}'+
+    'header p{margin:5px 0 0;color:var(--muted);font-size:13px}'+
+    '.kpi{display:flex;margin:14px 0 6px;background:var(--lavande);border-radius:12px}'+
+    '.kpi div{flex:1;padding:10px 8px;text-align:center}'+
+    '.kpi b{display:block;font-size:20px;font-weight:900;font-style:italic;color:var(--violet)}'+
+    '.kpi span{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700}'+
+    '.mode{margin:0 0 10px;font-size:12.5px;color:var(--muted)}'+
+    'ol{list-style:none;margin:0;padding:0}'+
+    'li{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);break-inside:avoid}'+
+    '.n{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--rouge);color:#fff;font-weight:900;font-style:italic;font-size:14px}'+
+    '.dep .n,.ret .n{background:var(--violet)}'+
+    '.tx{flex:1;min-width:0}.tx b{display:block;font-size:15px}'+
+    '.m,.lg{display:block;font-size:12px;color:var(--muted)}.lg{color:var(--violet);font-weight:600}'+
+    '.ck{width:22px;height:22px;border:2px solid var(--violet);border-radius:5px;flex:none;margin-top:4px}'+
+    'footer{margin-top:16px;font-size:11px;color:var(--muted)}'+
+    '.imp{display:block;margin:18px auto 0;padding:11px 20px;border:0;border-radius:10px;background:var(--violet);color:#fff;font:inherit;font-weight:700;cursor:pointer}'+
+    '@page{margin:12mm}@media print{body{padding:0}.imp{display:none}}'+
+    '</style></head><body><main>'+
+    '<header><img src="img/logo.png" alt=""><div><h1>Tournée collage</h1><p>Nanterre · '+esc(jour)+'</p></div></header>'+
+    '<div class="kpi"><div><b>'+(r.tour.length-(r.labels[r.tour[0]].id==='D'?1:0))+'</b><span>Emplacements</span></div>'+
+      '<div><b>'+nb+'</b><span>Panneaux</span></div>'+
+      '<div><b>'+fmtKm(r.dist)+'</b><span>Distance</span></div>'+
+      '<div><b>'+fmtMin(r.dur+(r.dwell||0))+'</b><span>Avec collage</span></div></div>'+
+    '<p class="mode">Trajet '+OSRM[mode].label+' : '+fmtMin(r.dur)+(r.boucle?' · boucle, retour au départ':' · aller simple')+'</p>'+
+    '<ol>'+li+'</ol>'+
+    '<footer>Collage Nanterre · '+esc(location.origin+location.pathname)+'</footer>'+
+    '<button class="imp" onclick="print()">🖨 Imprimer / enregistrer en PDF</button>'+
+    '</main></body></html>';
+  const w=window.open('','_blank');
+  if(!w){ dl('tournee-collage.html',html,'text/html;charset=utf-8'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
 }
 function openGmaps(){
   const r=lastRoute; if(!r) return;
