@@ -24,9 +24,10 @@ que sur cette adresse en `https`, pas sur un fichier ouvert en local.
   toute une tournée : **collé**, **toujours collé** ou **recouvert** (en rouge, à refaire). Le suivi est
   partagé entre tous, sans compte ni nom, par un petit service Cloudflare (dossier `worker/`).
 
-**117 emplacements, 131 panneaux**, sur 10 quartiers de Nanterre. 114 sont vérifiés
-(107 confirmés, 7 marqués introuvables mais conservés dans la liste) ; 2 viennent d'une
-carte tierce et 1 a une position approchée : ces 3 restent à vérifier sur place.
+**110 emplacements, 124 panneaux**, sur 10 quartiers de Nanterre. 107 sont confirmés ; 2
+viennent d'une carte tierce et 1 a une position approchée : ces 3 restent à vérifier sur
+place. Les 7 emplacements introuvables ont été retirés de la carte et sont conservés dans le
+champ `retires` de `panneaux.json`.
 
 ## Modifier les panneaux
 

@@ -396,10 +396,11 @@ function loadLocal(){
   // publié est plus récent que la version sur laquelle elles ont été faites, c'est
   // qu'elles ont été publiées : on les écarte pour ne pas masquer les données à jour.
   const base=s.base==null?0:s.base, cur=(DATA&&DATA.version)||0;
-  // Les vérifications enregistrées sont aussi celles déjà publiées : seules comptent celles qui en diffèrent.
+  // Les vérifications enregistrées sont aussi celles déjà publiées : seules comptent celles qui en
+  // diffèrent, sur un emplacement qui existe encore.
   const verifsPropres=Object.entries(s.verifs||{}).filter(([id,v])=>{
     const q=panels.find(x=>x.id===id);
-    return !q||JSON.stringify(q.v)!==JSON.stringify(v);
+    return q&&JSON.stringify(q.v)!==JSON.stringify(v);
   }).length;
   const aDesCorrections=(s.custom||[]).length+Object.keys(s.moves||{}).length+
                         (s.deleted||[]).length+verifsPropres;

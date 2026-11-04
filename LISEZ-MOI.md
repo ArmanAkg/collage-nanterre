@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 117 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `panneaux.json` | les 110 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `zones.json` | contours des 6 boucles des groupes Telegram et de la ville, copiés de l'outil Tractage ; tracés en pointillés sur la carte |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
@@ -121,14 +121,14 @@ continuerait de masquer la donnée à jour : un panneau publié comme vérifié 
 
 ## D'où viennent les données
 
-**117 emplacements, 131 panneaux physiques**, sur 10 quartiers de Nanterre.
+**110 emplacements, 124 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
-statut daté — 94 confirmés, 9 marqués introuvables. Les emplacements introuvables sont
-conservés volontairement : ils restent sélectionnables, à trancher lors d'un prochain
-passage sur le terrain. Les décomptes par source ci-dessous décrivent l'origine des
-données avant vérification.
+statut daté — 94 confirmés, 9 marqués introuvables. Les 7 emplacements encore introuvables
+ont été retirés de la carte et du suivi le 4 novembre 2026 : voir « Emplacements retirés »
+plus bas. Les décomptes par source ci-dessous décrivent l'origine des données avant
+vérification.
 
 Cinq sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM seul` /
 `Framacarte` / `Terrain` :
@@ -165,6 +165,11 @@ confirmé, plutôt que de créer un doublon.
 points dont l'absence a été constatée sur le terrain, avec leurs coordonnées et la date.
 Ils ne doivent pas être réintroduits lors d'un recoupement avec une source extérieure.
 À ce jour : `94 Rue de Sartrouville`.
+
+**Emplacements retirés.** Le champ `retires` de `panneaux.json` garde, avec toutes leurs
+données, les 7 emplacements marqués introuvables sur les photos de rue : `19`, `84`, `107`,
+`115`, `117`, `120` et `R`. L'outil ne les affiche plus. Leur absence n'a pas été constatée
+sur place : si l'un d'eux est retrouvé, il suffit de remettre sa ligne dans `panels`.
 
 ### Sources recoupées, sans apport
 
@@ -243,7 +248,8 @@ Ajouter l'adresse à l'écran d'accueil du téléphone donne un accès en un ges
 Chaque emplacement peut porter un statut issu de la campagne de vérification :
 `✓ vérifié` ou `? introuvable`, avec sa date. Il s'affiche en étiquette dans la liste et
 sur la carte (liseré vert, ou point estompé pour un emplacement introuvable), et il est
-enregistré dans `panneaux.json`.
+enregistré dans `panneaux.json`. Aucun emplacement affiché n'est introuvable aujourd'hui : ils
+ont été retirés.
 
 Le mode de vérification assisté par photos de rue qui a servi à produire ces statuts a été
 retiré de l'interface une fois la campagne terminée. Il reste disponible dans l'historique
