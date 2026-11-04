@@ -17,8 +17,7 @@ que sur cette adresse en `https`, pas sur un fichier ouvert en local.
 - Départ au clic sur la carte, par adresse, ou par géolocalisation.
 - Trois modes : **à pied**, **vélo**, **voiture** (les sens uniques sont respectés).
 - Distance, durée de trajet et durée totale avec le temps de collage.
-- Export **GPX** (montre GPS, OsmAnd, Komoot), **feuille de route** à imprimer, ouverture
-  dans **Google Maps**.
+- **Feuille de route** à imprimer et ouverture dans **Google Maps**.
 - Onglet **Suivi** : la carte colorée selon le dernier passage (moins de 7 jours, 7 à 14,
   14 à 30, plus de 30 ou jamais), et un clic pour actualiser un panneau, un quartier ou
   toute une tournée : **collé**, **toujours collé** ou **recouvert** (en rouge, à refaire). Le suivi est
@@ -31,17 +30,9 @@ champ `retires` de `panneaux.json`.
 
 ## Modifier les panneaux
 
-Déplacer, ajouter ou supprimer un panneau demande un **mot de passe** et ne change les
-données que dans **votre** navigateur : les autres ne voient rien.
-
-Pour qu'une correction devienne officielle, il faut la publier dans ce dépôt :
-
-1. faire les corrections dans l'outil ;
-2. cliquer sur **⤓ Exporter panneaux.json** — le fichier se télécharge ;
-3. remplacer `panneaux.json` du dépôt par celui qui vient d'être téléchargé ;
-4. `git add panneaux.json && git commit -m "maj panneaux" && git push` ;
-5. de retour dans l'outil, cliquer sur **↺** pour oublier les corrections locales
-   (elles sont désormais dans le fichier publié).
+Les panneaux ne se modifient plus depuis la page : on change `panneaux.json` (un emplacement
+par ligne), puis `git add panneaux.json && git commit -m "maj panneaux" && git push`.
+Pensez à augmenter son champ `version` et à mettre à jour sa date `maj`.
 
 Une minute après le `push`, tout le monde a la nouvelle version au rechargement de la page.
 La date des données est affichée en haut du panneau.
@@ -74,7 +65,7 @@ marche pas : le navigateur refuse de lire `panneaux.json` en `file://`.
 ## Documentation détaillée
 
 [LISEZ-MOI.md](LISEZ-MOI.md) — mode d'emploi complet, provenance et fiabilité des données,
-méthode de calcul de l'itinéraire, changement du mot de passe.
+méthode de calcul de l'itinéraire.
 
 ## Données et services
 

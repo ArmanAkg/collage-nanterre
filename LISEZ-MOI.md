@@ -26,7 +26,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
 | `panneaux.json` | les 110 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `zones.json` | contours des 6 boucles des groupes Telegram et de la ville, copiés de l'outil Tractage ; tracés en pointillés sur la carte |
-| `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
+| `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (archive, l'outil ne l'affiche plus) |
 | `690d4825-….jfif` | l'image source d'origine |
 | `panneaux_suppélementaires.txt` | la liste d'adresses d'origine |
 | `img/logo.png` | logo du pôle collage, repris des visuels Telegram (`visus/logos_telegram/bandeau`), réduit à 128 px ; `img/icone-180.png`, le même sur fond blanc, sert d'icône sur l'écran d'accueil du téléphone |
@@ -46,47 +46,15 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
    le panneau le plus coûteux à quitter, au lieu de payer l'aller *et* le retour.
 3. **Panneaux** — clic sur un point de la carte ou sur une ligne de la liste pour le
    sélectionner. `tout / rien` sélectionne un quartier entier ; le champ de filtre accepte
-   un numéro, un nom de rue ou un quartier. Les boutons `Carte` / `Liste` / `OSM seul`
-   du volet réservé masquent ou affichent une source (le filtre s'applique aussi à `Tout`
-   et `tout / rien`). Ce filtre est **mémorisé dans le navigateur** : si des emplacements
-   sont masqués, un bandeau jaune l'annonce au-dessus de la liste avec un bouton
-   **Tout afficher**, et le compteur d'en-tête indique « N affichés sur M ».
-4. **Gestion des panneaux** — tous les outils d'édition sont regroupés dans le volet
-   `⚙ Gestion des panneaux — réservé`, **replié par défaut** : filtres par source, mot de
-   passe, verrou des positions, ajout, export/import, calque de la carte d'origine. Les
-   boutons `✥` et `🗑` des lignes n'apparaissent qu'une fois le mot de passe saisi. Pour
-   qui vient juste préparer une tournée, l'outil se limite donc à : départ, mode,
-   sélection, calcul.
-
-   **Mot de passe livré : `collage`.** Il est demandé à la première action de modification,
-   puis retenu jusqu'à la fermeture de l'onglet ; `🔓 Modifications déverrouillées`
-   reverrouille immédiatement. Voir « Changer le mot de passe » plus bas.
-5. **Ajouter un panneau** — bouton « Ajouter un panneau » puis clic sur la carte, ou
-   saisie d'une adresse. L'adresse est retrouvée automatiquement. Les panneaux ajoutés
-   portent un numéro `P1`, `P2`…
-6. **Corriger la position d'un panneau** — les positions sont **verrouillées par défaut**.
-   Deux façons de déplacer un point, au choix :
-   - `🔒 Positions verrouillées` → le bouton passe en orange, les points deviennent
-     glissables sur la carte ;
-   - bouton `✥` sur la ligne du panneau → l'outil zoome dessus et attend un clic sur la
-     carte à la bonne position.
-
-   Dans les deux cas une **confirmation apparaît dans le panneau** (pas de fenêtre du
-   navigateur) en indiquant la distance : `Garder la nouvelle position` ou `Annuler`.
-   Un point déplacé porte l'étiquette *déplacé*, son marqueur passe en pointillés, et le
-   bouton `↺` le remet à sa position d'origine. Pensez à re-verrouiller ensuite.
-7. **Supprimer un panneau** — bouton `🗑` sur la ligne, avec confirmation. Un panneau
-   issu des données de base est masqué et récupérable : une ligne
-   *« N panneau(x) supprimé(s) — tout restaurer »* apparaît en bas de la liste. Un panneau
-   que vous avez ajouté vous-même est supprimé définitivement.
-8. **Calculer** — trace la boucle, numérote les arrêts dans l'ordre, et affiche
+   un numéro, un nom de rue ou un quartier.
+4. **Calculer** — trace la boucle, numérote les arrêts dans l'ordre, et affiche
    distance / durée / durée avec collage, puis le détail arrêt par arrêt.
-9. **Exports** — GPX (montre GPS, OsmAnd, Komoot…), **feuille de route** à imprimer
+5. **Exports** — **feuille de route** à imprimer
    (s'ouvre dans un nouvel onglet ; son bouton « Imprimer » donne aussi un PDF ; une case
    à cocher par emplacement pour suivre la tournée sur papier), ouverture dans Google Maps
    (limité à 10 étapes par Google).
 
-10. **Onglet Suivi** (lien direct : `…/outil-collage.html#suivi`) — les panneaux prennent
+6. **Onglet Suivi** (lien direct : `…/outil-collage.html#suivi`) — les panneaux prennent
     la couleur de leur dernier passage : moins de 7 jours, 7 à 14, 14 à 30, plus de 30 ou
     jamais. Le bouton `✓` d'une ligne marque d'un clic « toujours collé ». Pour plusieurs
     panneaux : les choisir sur la carte ou dans la liste (`tout / rien` pour un quartier,
@@ -107,17 +75,11 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
     `cd worker`, puis `npx wrangler@4 deploy`. Pour le tester sans réseau : `npx wrangler@4 d1
     execute collage-suivi --local --file=schema.sql`, puis `npx wrangler@4 dev --port 8787`.
 
-Sélection, panneaux ajoutés, positions corrigées, suppressions, filtres, mode et départ sont
-mémorisés dans le navigateur.
+Sélection, mode et départ sont mémorisés dans le navigateur.
 
-**Priorité entre corrections locales et données publiées.** Les corrections faites dans
-l'outil sont des modifications *non encore publiées* : elles s'appliquent par-dessus
-`panneaux.json`. Si une version plus récente du fichier est publiée, c'est que ces
-corrections ont été intégrées — l'outil les écarte donc automatiquement au chargement et
-l'annonce par un bandeau vert, avec un bouton **Les restaurer quand même** si besoin (une
-copie est conservée dans le navigateur). Sans ce mécanisme, une correction locale ancienne
-continuerait de masquer la donnée à jour : un panneau publié comme vérifié resterait grisé
-à l'écran. Les préférences (sélection, mode, départ, filtres) ne sont jamais effacées.
+Les panneaux ne se modifient plus depuis la page : ajouts, déplacements et retraits se font
+dans `panneaux.json`, puis `git commit` et `git push`. L'ancien volet d'édition reste dans
+l'historique git (`git show cf30235:outil-collage.html`).
 
 ## D'où viennent les données
 
@@ -130,8 +92,7 @@ ont été retirés de la carte et du suivi le 4 novembre 2026 : voir « Emplacem
 plus bas. Les décomptes par source ci-dessous décrivent l'origine des données avant
 vérification.
 
-Cinq sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM seul` /
-`Framacarte` / `Terrain` :
+Cinq sources :
 
 - **`Carte` — 68 emplacements restants** extraits de la carte d'origine : détection des pastilles
   de couleur, puis calage de l'image sur le réseau routier OpenStreetMap
@@ -143,10 +104,10 @@ Cinq sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM 
   géocodés via la Base Adresse Nationale.
 - **`OSM seul` — 28 emplacements restants** (n° 82 et suivants) présents dans OpenStreetMap mais
   **absents de la carte d'origine**, dont **11 dans le quartier du Petit-Nanterre**, jamais
-  traité jusqu'ici. Étiquetés `hors carte` dans la liste.
+  traité jusqu'ici.
 - **`Framacarte` — 2 emplacements** (n° 124 et 125) : `8 Rue Jacques Decour` et
-  `56 Rue Abdelmalek Sayad`. Étiquetés `framacarte`, **non vérifiés**, à contrôler sur place.
-- **`Terrain` — 14 emplacements** relevés directement sur place, étiquetés `terrain` et
+  `56 Rue Abdelmalek Sayad`. **Non vérifiés**, à contrôler sur place.
+- **`Terrain` — 14 emplacements** relevés directement sur place et
   confirmés d'office, sauf `137` (67 boulevard Jules Mansart, adresse absente de la Base
   Adresse Nationale : position approchée, près de l'école Miriam Makeba, à vérifier) :
   `133` sous le pont face à l'université (2 panneaux), `134` boulevard du 17 Octobre 1961
@@ -192,7 +153,7 @@ absence. À trancher lors d'un prochain passage.
 **Recalage sur OpenStreetMap** — OSM référence des nœuds `board_type=notice` nommés
 « Affichage Libre », relevés sur le terrain. Chaque point de la carte situé à **70 m ou
 moins** de l'un d'eux a été replacé exactement dessus (37 points, déplacement moyen 23 m).
-Les emplacements ainsi calés portent l'étiquette `OSM` et sont fiables au mètre ; les
+Les emplacements ainsi calés (champ `osm`) sont fiables au mètre ; les
 autres gardent la position déduite de la carte, à vérifier sur le terrain.
 
 **Emplacements groupés** — certains points OSM sont distants de 2 à 5 m : ce sont des
@@ -213,11 +174,7 @@ adresse la plus proche.
 Les **quartiers** sont les 11 quartiers officiels de Nanterre (limites administratives
 OSM, `admin_level=10`). Ils sont regroupés en **6 boucles**, celles des groupes Telegram
 (champ `boucles` de `panneaux.json`) : chaque boucle a sa teinte, déclinée en nuances
-proches pour ses quartiers (champ `qcol`), et la liste suit l'ordre des boucles. La
-pastille de couleur à côté des adresses issues de la carte
-rappelle la couleur du panneau sur la carte d'origine.
-
-Le calque « Carte d'origine » permet de vérifier chaque point contre la carte de départ.
+proches pour ses quartiers (champ `qcol`), et la liste suit l'ordre des boucles.
 
 ## Sur téléphone
 
@@ -236,61 +193,21 @@ L'outil est prévu pour être utilisé sur le terrain, téléphone en main :
   hauteur en `dvh` pour ne pas être coupé par la barre d'adresse ;
 - **toute la feuille défile**, pas seulement la liste des panneaux. Sur ordinateur le
   panneau latéral est fixe et seule la liste défile ; sur téléphone cela rendait
-  inaccessibles les champs situés sous une section dépliée — avec le volet réservé ouvert,
-  la liste tombait à 14 px de haut et les boutons d'export se retrouvaient à 150 px sous
-  le bas de l'écran, sans moyen d'y accéder. La barre de résumé reste collée en haut et le
+  inaccessibles les champs situés sous une section dépliée. La barre de résumé reste collée en haut et le
   bouton de calcul en bas pendant le défilement.
 
 Ajouter l'adresse à l'écran d'accueil du téléphone donne un accès en un geste.
 
 ## Statuts de vérification
 
-Chaque emplacement peut porter un statut issu de la campagne de vérification :
-`✓ vérifié` ou `? introuvable`, avec sa date. Il s'affiche en étiquette dans la liste et
-sur la carte (liseré vert, ou point estompé pour un emplacement introuvable), et il est
-enregistré dans `panneaux.json`. Aucun emplacement affiché n'est introuvable aujourd'hui : ils
-ont été retirés.
+Chaque emplacement peut porter un statut issu de la campagne de vérification, avec sa date
+(champ `v` de `panneaux.json`). Dans l'outil, seuls les emplacements sans statut se signalent,
+par la mention `à vérifier`. Le champ `rep`
+donne un repère utile sur place, affiché sous l'adresse.
 
 Le mode de vérification assisté par photos de rue qui a servi à produire ces statuts a été
 retiré de l'interface une fois la campagne terminée. Il reste disponible dans l'historique
 git (`git show facd6d5`) si une nouvelle campagne devient nécessaire.
-
-## Publier ses corrections
-
-Les modifications faites dans l'outil (déplacements, ajouts, suppressions) restent dans le
-`localStorage` du navigateur : personne d'autre ne les voit. Pour les rendre officielles :
-
-1. **⤓ Exporter panneaux.json** télécharge le fichier de données à jour — les positions
-   corrigées y deviennent les positions de référence, les panneaux supprimés en sont
-   retirés, les panneaux ajoutés y figurent avec leur quartier (calculé à partir des
-   limites administratives embarquées dans le fichier) ;
-2. remplacer `panneaux.json` du dépôt par ce fichier, puis `git commit` et `git push` ;
-3. **↺** oublie ensuite les corrections locales du navigateur, désormais inutiles.
-
-**⤒ Importer** recharge un `panneaux.json` sans passer par le dépôt : pratique pour
-vérifier un export avant de le publier, ou pour intégrer le fichier d'un camarade.
-
-Le fichier exporté est écrit **un emplacement par ligne**, pour que `git diff` montre
-exactement ce qui a changé. Il porte une date (`maj`) et un numéro de `version`, tous deux
-affichés en haut du panneau, ce qui permet de vérifier d'un coup d'œil que chacun travaille
-sur la même version.
-
-## Changer le mot de passe
-
-Le fichier ne contient pas le mot de passe, seulement son empreinte SHA-256. Pour le
-changer :
-
-1. ouvrir l'outil, puis la console du navigateur (F12 → onglet *Console*) ;
-2. taper `empreinte('votre-nouveau-mot-de-passe')` et copier la ligne affichée ;
-3. dans `outil-collage.html`, remplacer la valeur de `PWD_HASH` (vers le début du
-   `<script>`) par cette empreinte.
-
-⚠️ **Ce mot de passe est un garde-fou, pas une sécurité.** L'outil est une page qui tourne
-entièrement dans le navigateur : quelqu'un de motivé peut contourner la protection en
-lisant le code source de la page. Le but est d'éviter les modifications par inadvertance
-et de réserver l'édition à qui connaît le mot de passe — pas de protéger contre une
-personne malveillante. Les modifications restent de toute façon locales au navigateur
-(rien n'est envoyé nulle part) : la référence partagée reste `panneaux.json`.
 
 ## Comment l'itinéraire est calculé
 
