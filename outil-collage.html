@@ -48,7 +48,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 input[type=password]{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:7px;flex:1;min-width:0}
 input[type=text],input[type=number]{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
 input[type=text]{flex:1;min-width:0}
-#list{flex:1;min-height:0;overflow:auto;padding:4px 0 10px}
+#list,#listS{flex:1;min-height:0;overflow:auto;padding:4px 0 10px}
 .grp{padding:8px 14px 4px;font-size:11px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:7px;
      position:sticky;top:0;background:var(--panel);z-index:1;text-transform:uppercase;letter-spacing:.4px}
 .grp .sw{width:10px;height:10px;border-radius:50%;flex:none}
@@ -112,6 +112,25 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
      display:grid;place-items:center;box-shadow:0 2px 6px rgba(28,21,48,.5);font-size:12px;font-weight:800;line-height:1}
 .blbl{text-align:center;font-size:18px;font-weight:900;font-style:italic;line-height:24px;opacity:.75;
       text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;pointer-events:none}
+.tabs{display:flex;flex:none;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;border:0;border-radius:0;background:0;padding:10px 6px 9px;font-weight:700;color:var(--muted);
+  border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--violet);border-bottom-color:var(--rouge)}
+#pTournee,#pSuivi{display:contents}
+.off{display:none!important}
+.leg{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin:0 0 9px;font-size:12px}
+.leg div{display:flex;align-items:center;gap:6px}
+.leg i{width:13px;height:13px;border-radius:50%;flex:none}
+.leg b{margin-left:auto;font-weight:700}
+#footS .acts{flex-wrap:nowrap;margin-top:7px}
+#footS .acts button{flex:1;padding:8px 4px;white-space:nowrap}
+#footS .haut{justify-content:space-between}
+#footS input[type=date]{font:inherit;font-size:12.5px;padding:4px 6px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+#msgS .ok{display:flex;align-items:center;gap:8px;margin-top:7px;padding:6px 9px;border-radius:7px;background:var(--lavande);font-size:12px}
+#msgS button{margin-left:auto;padding:3px 8px;font-size:11.5px}
+.it .act.fait{opacity:1;color:var(--violet);border:1px solid var(--line);border-radius:7px;background:#fff;font-size:13px;font-weight:700;padding:3px 9px}
+.suivi .pin.sel{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,21,48,.45),0 1px 4px rgba(0,0,0,.45)}
+button.primary.rouge{background:var(--rouge);border-color:var(--rouge)}
 #grab{display:none}
 
 /* ---------- téléphone / tablette ---------- */
@@ -151,17 +170,17 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
   .it .act{opacity:1;padding:6px 8px;font-size:16px}
   .grp{padding:9px 14px 5px}
   .grp button{padding:5px 9px}
-  #list{-webkit-overflow-scrolling:touch}
+  #list,#listS{-webkit-overflow-scrolling:touch}
   /* Sur téléphone c'est toute la feuille qui défile, pas seulement la liste :
      sinon les sections dépliées repoussent les champs hors de l'écran, sans
      aucun moyen de les atteindre. */
   #side{height:82dvh;max-height:82dvh;overflow-y:auto;overflow-x:hidden;
         -webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-  #side > *{flex:none}
+  #side > *,#pTournee > *,#pSuivi > *{flex:none}
   #grab{position:sticky;top:0;z-index:5}
-  #list{flex:none;min-height:0;overflow:visible}
+  #list,#listS{flex:none;min-height:0;overflow:visible}
   #res{flex:none;max-height:none;overflow:visible}
-  #foot{position:sticky;bottom:0;background:var(--panel);z-index:2;
+  #foot,#footS{position:sticky;bottom:0;background:var(--panel);z-index:2;
         box-shadow:0 -4px 10px rgba(0,0,0,.05)}
   .leaflet-bottom{bottom:calc(var(--grabH,58px) - 4px)}
   header p{font-size:11.5px}
@@ -196,9 +215,16 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
       <div class="hd">
         <h1 class="titre">Collage</h1>
         <div id="newver"></div>
-        <p><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span><span id="nbp"></span><span id="maj"></span></p>
+        <p id="infoT"><span id="cnt" class="badge">0</span> panneau(x) sélectionné(s) sur <span id="tot">0</span><span id="nbp"></span><span id="maj"></span></p>
+        <p id="infoS" class="off">Dernier passage sur chaque panneau</p>
       </div>
     </header>
+    <div class="tabs" id="tabs">
+      <button data-o="tournee" class="on">Tournée</button>
+      <button data-o="suivi">Suivi</button>
+    </div>
+
+    <div id="pTournee">
 
     <details id="setup" open>
       <summary><span id="setupTxt">Départ &amp; déplacement</span></summary>
@@ -286,6 +312,32 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
     </div>
 
     <div id="res"></div>
+    </div>
+
+    <div id="pSuivi" class="off">
+      <div class="sec">
+        <div class="leg" id="legS"></div>
+        <div class="row">
+          <input type="text" id="qS" placeholder="Filtrer (rue, n°, quartier)…">
+          <button id="bAllS">Tout</button>
+          <button id="bNoneS">Aucun</button>
+        </div>
+      </div>
+      <div id="listS"></div>
+      <div class="sec" id="footS" style="border-bottom:0">
+        <div class="row haut">
+          <b id="nS"></b>
+          <input type="date" id="dS" aria-label="Date du passage">
+        </div>
+        <div class="row acts" id="actsS">
+          <button class="primary" data-t="colle">Collé</button>
+          <button class="primary" data-t="ok">Toujours collé</button>
+          <button class="primary rouge" data-t="recouvert">Recouvert</button>
+        </div>
+        <div id="msgS"></div>
+        <p class="note" id="etatS"></p>
+      </div>
+    </div>
   </div>
   <div id="map"></div>
 </div>
@@ -309,7 +361,7 @@ const PERSO='Mes panneaux';
 let DATA=null, panels=[], sel=new Set(), mode='foot', start=null, startLabel='', markers={}, overlay=null;
 let pickMode=null, routeLayer=null, ordLayer=null, startMarker=null, lastRoute=null, unlocked=false;
 let srcOn={carte:true,liste:true,osm:true,perso:true,local:true,frama:true,terrain:true};
-let deleted=new Set(), moveTarget=null, authed=false;
+let deleted=new Set(), moveTarget=null, authed=false, onglet='tournee';
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -344,8 +396,13 @@ function loadLocal(){
   // publié est plus récent que la version sur laquelle elles ont été faites, c'est
   // qu'elles ont été publiées : on les écarte pour ne pas masquer les données à jour.
   const base=s.base==null?0:s.base, cur=(DATA&&DATA.version)||0;
+  // Les vérifications enregistrées sont aussi celles déjà publiées : seules comptent celles qui en diffèrent.
+  const verifsPropres=Object.entries(s.verifs||{}).filter(([id,v])=>{
+    const q=panels.find(x=>x.id===id);
+    return !q||JSON.stringify(q.v)!==JSON.stringify(v);
+  }).length;
   const aDesCorrections=(s.custom||[]).length+Object.keys(s.moves||{}).length+
-                        (s.deleted||[]).length+Object.keys(s.verifs||{}).length;
+                        (s.deleted||[]).length+verifsPropres;
   if(cur>base && aDesCorrections){
     try{ localStorage.setItem(LS+'-precedent', JSON.stringify(s)); }catch(e){}
     staleInfo={base, cur, maj:DATA.maj||'', n:aDesCorrections};
@@ -472,6 +529,12 @@ function askClear(){ if(askCancel){ const c=askCancel; askCancel=null; c(); } ms
 
 /* ---------- marqueurs ---------- */
 function icon(p){
+  if(onglet==='suivi'){
+    const e=etat(p.id), on=selS.has(p.id), d=on?26:18;
+    return L.divIcon({className:'',iconSize:[d,d],iconAnchor:[d/2,d/2],
+      html:'<div class="pin'+(on?' sel':'')+'" style="width:'+d+'px;height:'+d+'px;background:'+e.c+';color:'+e.t+
+           ';text-shadow:none">'+((on&&p.id.length<=3)?esc(p.id):'')+'</div>'});
+  }
   const on=sel.has(p.id), d=on?26:18;
   const lbl=(on&&p.id.length<=3)?esc(p.id):'';
   return L.divIcon({className:'',iconSize:[d,d],iconAnchor:[d/2,d/2],
@@ -479,6 +542,8 @@ function icon(p){
          'px;background:'+qcol(p.q||PERSO)+'">'+lbl+'</div>'});
 }
 function tip(p){
+  if(onglet==='suivi') return '<b>'+esc(p.a)+'</b><br>n° '+esc(p.id)+(p.q?' · '+esc(p.q):'')+
+    (p.nb>1?' · '+p.nb+' panneaux':'')+'<br>'+esc(libPassage(p.id))+historique(p.id);
   return '<b>'+esc(p.a)+'</b><br>n° '+esc(p.id)+(p.q?' · '+esc(p.q):'')+
          (p.nb>1?'<br><b>'+p.nb+' panneaux à cet emplacement</b>'+(p.nums?' (n° '+p.nums.join(', ')+')':''):'')+
          (p.osm?'<br><i>calé sur le panneau OSM ('+p.snap+' m)</i>':'')+
@@ -487,7 +552,7 @@ function tip(p){
 }
 function addMarker(p){
   const m=L.marker([p.lat,p.lon],{icon:icon(p),draggable:unlocked});
-  m.on('click',()=>{ if(!unlocked && !moveTarget) toggle(p.id); });
+  m.on('click',()=>{ if(onglet==='suivi') toggleS(p.id); else if(!unlocked && !moveTarget) toggle(p.id); });
   m.on('dragend',()=>onDrag(p,m));
   m.bindTooltip(tip(p),{direction:'top',offset:[0,-8]});
   m.addTo(map); markers[p.id]=m;
@@ -892,7 +957,12 @@ $('#bGo').onclick=async()=>{
     $('#exp').innerHTML='<div class="row exp">'+
       '<button id="bGpx">⤓ GPX</button>'+
       '<button id="bPrint">🖨 Feuille de route</button>'+
-      '<button id="bGmap">🗺 Google Maps</button></div>';
+      '<button id="bGmap">🗺 Google Maps</button></div>'+
+      '<button id="bMarq" style="width:100%;margin-top:6px">✓ Marquer cette tournée dans le suivi</button>';
+    $('#bMarq').onclick=()=>{
+      selS=new Set(lastRoute.labels.map(l=>l.id).filter(id=>id!=='D'));
+      setOnglet('suivi');
+    };
     $('#bGpx').onclick=exportGpx; $('#bPrint').onclick=printRoute; $('#bGmap').onclick=openGmaps;
     syncGrab();
     if(isMobile()){ sheet(false); }
@@ -1057,6 +1127,216 @@ function openGmaps(){
     '&waypoints='+p.slice(1,-1).join('%7C')+'&travelmode='+tm,'_blank');
 }
 
+/* ---------- suivi des passages ---------- */
+/* Historique partagé par le service du dossier worker/, ouvert à tous et sans nom. Une file
+   d'attente garde dans le navigateur ce qui n'a pas pu partir, faute de réseau sur le terrain. */
+const SUIVI_API='https://collage-suivi.collage-nanterre.workers.dev/passages';
+const LS_SUIVI='collage-nanterre-suivi-recus', LS_ATTENTE='collage-nanterre-suivi-attente';
+const TYPES={colle:'collé',ok:'toujours collé',recouvert:'recouvert'};
+const ETATS=[
+  {max:7,       nom:'Moins de 7 jours',  c:'#4c0297', t:'#fff'},
+  {max:14,      nom:'7 à 14 jours',      c:'#8a5cc7', t:'#fff'},
+  {max:30,      nom:'14 à 30 jours',     c:'#cdb8ec', t:'#1c1530'},
+  {max:Infinity,nom:'Plus de 30 j ou jamais', c:'#b4afbf', t:'#1c1530'}
+];
+/* Recouvert : à refaire, quelle que soit la date du signalement. */
+const RECOUVERT={nom:'Recouvert', c:'#d1271c', t:'#fff'};
+let passages=[], recus=[], attente=[], horsLigne=false, syncEnCours=false, syncEncore=false;
+let dernierPar={}, selS=new Set(), dernierLot=null;
+
+const auj=()=>{ const d=new Date(); return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+const ageJ=d=>Math.round((Date.parse(auj())-Date.parse(d))/864e5);
+const fmtJ=d=>new Date(d+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+const quand=d=>{ const a=ageJ(d); return a<=0?'aujourd’hui':a===1?'hier':'il y a '+a+' j'; };
+
+function suiviCharger(){
+  try{ recus=JSON.parse(localStorage.getItem(LS_SUIVI)||'[]').filter(x=>TYPES[x.t]); }catch(e){ recus=[]; }
+  try{ attente=JSON.parse(localStorage.getItem(LS_ATTENTE)||'[]'); }catch(e){ attente=[]; }
+  suiviAppliquer();
+  suiviSync();
+}
+function suiviGarder(){
+  try{
+    localStorage.setItem(LS_SUIVI,JSON.stringify(recus));
+    localStorage.setItem(LS_ATTENTE,JSON.stringify(attente));
+  }catch(e){}
+}
+/* Ce que dit le service, plus ce qui attend encore de partir. */
+function suiviAppliquer(){
+  passages=recus.slice();
+  attente.forEach(o=>{
+    passages=passages.filter(x=>x.b!==o.b);
+    if(o.op==='add') o.ids.forEach(id=>passages.push({p:id,t:o.t,d:o.d,b:o.b}));
+  });
+  suiviIndexer();
+}
+async function suiviEnvoyer(o){
+  const r=await fetch(o.op==='del'?SUIVI_API+'/'+o.b:SUIVI_API, o.op==='del'?{method:'DELETE'}:
+    {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:o.t,d:o.d,b:o.b,ids:o.ids})});
+  if(r.status>=500) throw new Error('service indisponible');
+}
+async function suiviSync(){
+  if(syncEnCours){ syncEncore=true; return; }
+  syncEnCours=true;
+  const avant=JSON.stringify(passages);
+  try{
+    while(attente.length){
+      await suiviEnvoyer(attente[0]);
+      attente.shift(); suiviGarder();
+    }
+    const r=await fetch(SUIVI_API,{cache:'no-store'});
+    if(!r.ok) throw new Error('service indisponible');
+    recus=await r.json();
+    horsLigne=false;
+  }catch(e){ horsLigne=true; }
+  syncEnCours=false;
+  suiviGarder(); suiviAppliquer();
+  if(onglet==='suivi'){
+    if(JSON.stringify(passages)!==avant) drawMarkers();
+    renderS();
+  }
+  if(syncEncore){ syncEncore=false; suiviSync(); }
+}
+setInterval(()=>{ if(onglet==='suivi'&&!document.hidden) suiviSync(); },60000);
+window.addEventListener('online',suiviSync);
+document.addEventListener('visibilitychange',()=>{ if(onglet==='suivi'&&!document.hidden) suiviSync(); });
+/* Le plus récent par sa date : une saisie à une date passée n'efface pas un passage plus récent. */
+function suiviIndexer(){
+  dernierPar={};
+  passages.forEach(x=>{ const c=dernierPar[x.p]; if(!c||x.d>=c.d) dernierPar[x.p]=x; });
+}
+function etat(id){
+  const x=dernierPar[id], a=x?ageJ(x.d):Infinity;
+  if(x&&x.t==='recouvert') return RECOUVERT;
+  return ETATS.find(e=>a<e.max)||ETATS[ETATS.length-1];
+}
+function libPassage(id){
+  const x=dernierPar[id];
+  return x?TYPES[x.t]+' '+quand(x.d):'jamais signalé';
+}
+function historique(id){
+  const l=passages.filter(x=>x.p===id).sort((a,b)=>a.d<b.d?1:-1).slice(1,4);
+  return l.map(x=>'<br><i>'+esc(TYPES[x.t])+' le '+fmtJ(x.d)+'</i>').join('');
+}
+function dateS(){
+  const v=$('#dS').value, a=auj();
+  return v&&v<=a?v:a;
+}
+function suiviMarquer(t,ids){
+  if(!ids.length) return;
+  const d=dateS(), b=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  attente.push({op:'add',t,d,b,ids});
+  suiviGarder(); suiviAppliquer();
+  dernierLot={b,t,d,n:ids.length};
+  selS.clear();
+  $('#dS').value=auj();
+  drawMarkers(); renderS();
+  suiviSync();
+}
+function suiviAnnuler(){
+  if(!dernierLot) return;
+  const b=dernierLot.b;
+  const enAttente=attente.some(o=>o.op==='add'&&o.b===b);
+  attente=attente.filter(o=>o.b!==b);
+  if(!enAttente) attente.push({op:'del',b});
+  suiviGarder(); suiviAppliquer();
+  dernierLot=null;
+  drawMarkers(); renderS();
+  suiviSync();
+}
+function toggleS(id){
+  selS.has(id)?selS.delete(id):selS.add(id);
+  refreshMarker(id); renderS();
+}
+function filtreS(g){
+  const q=$('#qS').value.trim().toLowerCase();
+  return panels.filter(p=>visible(p) && (!g||(p.q||PERSO)===g) &&
+    (!q||p.id.toLowerCase().includes(q)||(p.a||'').toLowerCase().includes(q)||(p.q||PERSO).toLowerCase().includes(q)));
+}
+function renderS(){
+  const vis=panels.filter(visible);
+  $('#legS').innerHTML=[RECOUVERT,...ETATS].map(e=>'<div><i style="background:'+e.c+'"></i>'+e.nom+
+    '<b>'+vis.filter(p=>etat(p.id)===e).length+'</b></div>').join('');
+  const age=p=>etat(p.id)===RECOUVERT?2e9:dernierPar[p.id]?ageJ(dernierPar[p.id].d):1e9;
+  let h='';
+  groupsInOrder().forEach(g=>{
+    const items=filtreS(g).sort((a,b)=>age(b)-age(a));
+    if(!items.length) return;
+    const nSel=items.filter(p=>selS.has(p.id)).length;
+    h+='<div class="grp"><span class="sw" style="background:'+qcol(g)+'"></span>'+esc(g)+
+       '<span class="n">'+nSel+'/'+items.length+'</span>'+
+       '<button class="gselS" data-g="'+esc(g)+'">tout / rien</button></div>';
+    items.forEach(p=>{
+      const e=etat(p.id);
+      h+='<div class="it'+(selS.has(p.id)?' sel':'')+'" data-id="'+esc(p.id)+'">'+
+         '<div class="num" style="background:'+e.c+';color:'+e.t+';text-shadow:none">'+esc(p.id)+'</div>'+
+         '<div class="tx"><div class="nm">'+esc(p.a)+'</div>'+
+           '<div class="meta">'+(p.nb>1?'<span class="tagnb">×'+p.nb+'</span>':'')+
+             '<span>'+esc(libPassage(p.id))+'</span></div></div>'+
+         '<button class="act fait" data-ok="'+esc(p.id)+'" title="Toujours collé : remet ce panneau à zéro">✓</button>'+
+         '</div>';
+    });
+  });
+  $('#listS').innerHTML=h||'<p class="note" style="padding:14px">Aucun résultat.</p>';
+  const n=vis.filter(p=>selS.has(p.id)).length;
+  $('#nS').textContent=n?n+' emplacement'+(n>1?'s':'')+' sélectionné'+(n>1?'s':''):'Sélectionnez des panneaux';
+  document.querySelectorAll('#actsS button').forEach(b=>b.disabled=!n);
+  $('#msgS').innerHTML=dernierLot?'<div class="ok"><span>'+dernierLot.n+' emplacement'+(dernierLot.n>1?'s':'')+' : '+
+    esc(TYPES[dernierLot.t])+' le '+fmtJ(dernierLot.d)+'</span><button id="bUndoS">Annuler</button></div>':'';
+  if($('#bUndoS')) $('#bUndoS').onclick=suiviAnnuler;
+  $('#etatS').textContent=(horsLigne?'Hors ligne : dernier état connu. ':'')+
+    (horsLigne&&attente.length?attente.length+' actualisation'+(attente.length>1?'s':'')+' en attente d’envoi.':'');
+  syncGrab();
+}
+$('#listS').addEventListener('click',e=>{
+  const ok=e.target.closest('[data-ok]');
+  if(ok){ e.stopPropagation(); suiviMarquer('ok',[ok.dataset.ok]); return; }
+  const g=e.target.closest('.gselS');
+  if(g){
+    const ids=filtreS(g.dataset.g).map(p=>p.id);
+    const allOn=ids.every(i=>selS.has(i));
+    ids.forEach(i=>{ allOn?selS.delete(i):selS.add(i); refreshMarker(i); });
+    renderS(); return;
+  }
+  const it=e.target.closest('.it');
+  if(it){
+    const p=panels.find(x=>x.id===it.dataset.id);
+    toggleS(it.dataset.id);
+    if(p) map.panTo([p.lat,p.lon]);
+  }
+});
+$('#qS').addEventListener('input',renderS);
+$('#bAllS').onclick=()=>{ filtreS().forEach(p=>selS.add(p.id)); drawMarkers(); renderS(); };
+$('#bNoneS').onclick=()=>{ selS.clear(); drawMarkers(); renderS(); };
+$('#actsS').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-t]');
+  if(b) suiviMarquer(b.dataset.t,panels.filter(p=>selS.has(p.id)&&visible(p)).map(p=>p.id));
+});
+
+/* ---------- onglets ---------- */
+function setOnglet(o){
+  onglet=o;
+  const s=o==='suivi';
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.o===o));
+  $('#pTournee').classList.toggle('off',s);
+  $('#infoT').classList.toggle('off',s);
+  $('#pSuivi').classList.toggle('off',!s);
+  $('#infoS').classList.toggle('off',!s);
+  $('#app').classList.toggle('suivi',s);
+  if(s){
+    pickMode=null; setUnlocked(false);
+    const a=auj(); $('#dS').max=a; if(!$('#dS').value||$('#dS').value>a) $('#dS').value=a;
+    suiviSync();
+  }
+  [routeLayer,ordLayer,startMarker].forEach(l=>{ if(l){ s?map.removeLayer(l):l.addTo(map); } });
+  drawMarkers();
+  s?renderS():renderList();
+  try{ history.replaceState(null,'',s?'#suivi':location.pathname+location.search); }catch(e){}
+}
+$('#tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-o]'); if(b&&b.dataset.o!==onglet) setOnglet(b.dataset.o);
+});
+
 /* ---------- panneau coulissant (mobile) ---------- */
 const isMobile=()=>window.matchMedia('(max-width:820px)').matches;
 function sheet(open){
@@ -1067,7 +1347,7 @@ function sheet(open){
 }
 const sheetOpen=()=>!$('#side').classList.contains('collapsed');
 $('#grabBtn').onclick=()=>sheet(!sheetOpen());
-$('#grabGo').onclick=()=>{ sheet(true); $('#bGo').click(); };
+$('#grabGo').onclick=()=>{ sheet(true); if(onglet!=='suivi') $('#bGo').click(); };
 function syncSetup(){
   const m=isMobile();
   const el=$('#setup');
@@ -1078,6 +1358,14 @@ function syncSetup(){
 }
 function syncGrab(){
   if(!isMobile()) return;
+  if(onglet==='suivi'){
+    const n=selS.size;
+    $('#grabTxt').textContent=n?n+' emplacement'+(n>1?'s':'')+' sélectionné'+(n>1?'s':''):'Suivi des passages';
+    $('#grabGo').textContent='Actualiser';
+    $('#grabGo').disabled=n<1;
+    return;
+  }
+  $('#grabGo').textContent='Calculer';
   const n=panels.filter(p=>sel.has(p.id)&&visible(p)).length;
   const nb=panels.filter(p=>sel.has(p.id)&&visible(p)).reduce((a,p)=>a+(p.nb||1),0);
   let t=n?n+' emplacement'+(n>1?'s':'')+' · '+nb+' panneau'+(nb>1?'x':''):'Choisir les panneaux';
@@ -1147,7 +1435,9 @@ fetch('panneaux.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{
   panels=d.panels.slice();
   loadLocal();
   document.querySelectorAll('#srcs button.src').forEach(b=>b.classList.toggle('on',srcOn[b.dataset.s]!==false));
+  suiviCharger();
   drawMarkers(); renderList(); renderAuth(); renderMaj(); syncSetup(); renderStale();
+  if(location.hash==='#suivi') setOnglet('suivi');
   fitOnce();
   if(isMobile()) sheet(false);
   fetch('zones.json',{cache:'no-cache'}).then(r=>r.json()).then(drawBoucles).catch(()=>{});

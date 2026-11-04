@@ -3,3 +3,7 @@
 .claude/
 .DS_Store
 Thumbs.db
+
+# Worker Cloudflare
+node_modules/
+.wrangler/

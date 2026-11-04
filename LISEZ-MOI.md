@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 110 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `panneaux.json` | les 117 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `zones.json` | contours des 6 boucles des groupes Telegram et de la ville, copiés de l'outil Tractage ; tracés en pointillés sur la carte |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (calque optionnel) |
 | `690d4825-….jfif` | l'image source d'origine |
@@ -86,6 +86,27 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
    à cocher par emplacement pour suivre la tournée sur papier), ouverture dans Google Maps
    (limité à 10 étapes par Google).
 
+10. **Onglet Suivi** (lien direct : `…/outil-collage.html#suivi`) — les panneaux prennent
+    la couleur de leur dernier passage : moins de 7 jours, 7 à 14, 14 à 30, plus de 30 ou
+    jamais. Le bouton `✓` d'une ligne marque d'un clic « toujours collé ». Pour plusieurs
+    panneaux : les choisir sur la carte ou dans la liste (`tout / rien` pour un quartier,
+    `Tout` pour tout ce que le filtre affiche), puis **Collé**, **Toujours collé** ou
+    **Recouvert**. Un panneau recouvert passe en rouge, quelle que soit la date, et remonte
+    en tête de son quartier jusqu'au prochain passage. La date est celle du jour, modifiable vers le passé ; une date ancienne ne
+    remplace pas un passage plus récent. **Annuler** retire la dernière actualisation.
+    Après un calcul, `✓ Marquer cette tournée dans le suivi` sélectionne ses panneaux.
+
+    Le suivi est **partagé et ouvert à tous** : aucun compte, aucun code, aucun nom enregistré
+    (panneau, type, date, numéro de lot). L'affichage se rafraîchit chaque minute. Sans réseau,
+    les actualisations attendent dans le navigateur et partent au retour de la connexion ; un
+    message « Hors ligne » le signale. Certains réseaux d'entreprise bloquent `workers.dev` :
+    l'outil y reste en « Hors ligne ».
+
+    Le service est dans `worker/` (Cloudflare Workers et base D1, offre gratuite), à l'adresse
+    `https://collage-suivi.collage-nanterre.workers.dev/passages`. Pour le redéployer :
+    `cd worker`, puis `npx wrangler@4 deploy`. Pour le tester sans réseau : `npx wrangler@4 d1
+    execute collage-suivi --local --file=schema.sql`, puis `npx wrangler@4 dev --port 8787`.
+
 Sélection, panneaux ajoutés, positions corrigées, suppressions, filtres, mode et départ sont
 mémorisés dans le navigateur.
 
@@ -100,7 +121,7 @@ continuerait de masquer la donnée à jour : un panneau publié comme vérifié 
 
 ## D'où viennent les données
 
-**111 emplacements, 124 panneaux physiques**, sur 10 quartiers de Nanterre.
+**117 emplacements, 131 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
@@ -125,8 +146,12 @@ Cinq sources, filtrables dans l'outil avec les boutons `Carte` / `Liste` / `OSM 
   traité jusqu'ici. Étiquetés `hors carte` dans la liste.
 - **`Framacarte` — 2 emplacements** (n° 124 et 125) : `8 Rue Jacques Decour` et
   `56 Rue Abdelmalek Sayad`. Étiquetés `framacarte`, **non vérifiés**, à contrôler sur place.
-- **`Terrain` — 8 emplacements** relevés directement sur place, étiquetés `terrain` et
-  confirmés d'office : `126` croisement rue de Metz / rue Buffon, `127` 8 Résidence des
+- **`Terrain` — 14 emplacements** relevés directement sur place, étiquetés `terrain` et
+  confirmés d'office, sauf `137` (67 boulevard Jules Mansart, adresse absente de la Base
+  Adresse Nationale : position approchée, près de l'école Miriam Makeba, à vérifier) :
+  `133` sous le pont face à l'université (2 panneaux), `134` boulevard du 17 Octobre 1961
+  et `135` 29 place Nelson Mandela aux Terrasses, `136` 2 allée d'Auvergne, `138` 31 terrasse
+  de l'Université (African Fusion), `126` croisement rue de Metz / rue Buffon, `127` 8 Résidence des
   Glycines, `128` 9 Allée des Ajoncs, `129` rue du 11 Novembre 1918, `130` rue des
   Pâquerettes, `131` 1 rue du 1er Mai, `132` 5 avenue Vladimir Ilitch Lénine, et
   `123` 5 Résidence des Jonquilles — ce dernier

@@ -19,10 +19,14 @@ que sur cette adresse en `https`, pas sur un fichier ouvert en local.
 - Distance, durée de trajet et durée totale avec le temps de collage.
 - Export **GPX** (montre GPS, OsmAnd, Komoot), **feuille de route** à imprimer, ouverture
   dans **Google Maps**.
+- Onglet **Suivi** : la carte colorée selon le dernier passage (moins de 7 jours, 7 à 14,
+  14 à 30, plus de 30 ou jamais), et un clic pour actualiser un panneau, un quartier ou
+  toute une tournée : **collé**, **toujours collé** ou **recouvert** (en rouge, à refaire). Le suivi est
+  partagé entre tous, sans compte ni nom, par un petit service Cloudflare (dossier `worker/`).
 
-**111 emplacements, 124 panneaux**, sur 10 quartiers de Nanterre. 108 sont vérifiés
-(101 confirmés, 7 marqués introuvables mais conservés dans la liste) ; 2 viennent d'une
-carte tierce et restent à vérifier sur place.
+**117 emplacements, 131 panneaux**, sur 10 quartiers de Nanterre. 114 sont vérifiés
+(107 confirmés, 7 marqués introuvables mais conservés dans la liste) ; 2 viennent d'une
+carte tierce et 1 a une position approchée : ces 3 restent à vérifier sur place.
 
 ## Modifier les panneaux
 

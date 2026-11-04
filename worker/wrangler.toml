@@ -1,0 +1,8 @@
+name = "collage-suivi"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "collage-suivi"
+database_id = "16cbeaed-dcdf-4118-883a-292c161dfb81"
