@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 110 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `panneaux.json` | les 114 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `zones.json` | contours des 6 boucles des groupes Telegram et de la ville, copiés de l'outil Tractage ; tracés en pointillés sur la carte |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (archive, l'outil ne l'affiche plus) |
 | `690d4825-….jfif` | l'image source d'origine |
@@ -87,13 +87,13 @@ l'historique git (`git show cf30235:outil-collage.html`).
 
 ## D'où viennent les données
 
-**110 emplacements, 124 panneaux physiques**, sur 10 quartiers de Nanterre.
+**114 emplacements, 128 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
 statut daté — 94 confirmés, 9 marqués introuvables. Les 7 emplacements encore introuvables
 ont été retirés de la carte et du suivi le 4 novembre 2026 : voir « Emplacements retirés »
-plus bas. Les décomptes par source ci-dessous décrivent l'origine des données avant
+plus bas ; le `19` a depuis été retrouvé. Les décomptes par source ci-dessous décrivent l'origine des données avant
 vérification.
 
 Cinq sources :
@@ -111,7 +111,7 @@ Cinq sources :
   traité jusqu'ici.
 - **`Framacarte` — 2 emplacements** (n° 124 et 125) : `8 Rue Jacques Decour` et
   `56 Rue Abdelmalek Sayad`. **Non vérifiés**, à contrôler sur place.
-- **`Terrain` — 14 emplacements** relevés directement sur place et
+- **`Terrain` — 17 emplacements** relevés directement sur place et
   confirmés d'office, sauf `137` (67 boulevard Jules Mansart, adresse absente de la Base
   Adresse Nationale : position approchée, près de l'école Miriam Makeba, à vérifier) :
   `133` sous le pont face à l'université (2 panneaux), `134` boulevard du 17 Octobre 1961
@@ -121,10 +121,15 @@ Cinq sources :
   Pâquerettes, `131` 1 rue du 1er Mai, `132` 5 avenue Vladimir Ilitch Lénine, et
   `123` 5 Résidence des Jonquilles — ce dernier
   remplaçant le point framacarte « 3 Résidence des Iris », déplacé de 87 m après relevé.
+  Au Parc Sud : `139` allée des Demoiselles d'Avignon (avenue Pablo Picasso), `140` 25 rue
+  de la Paix (de l'autre côté de l'avenue) et `141` mail de la Fraternité (limite Parc Sud /
+  Champs-Pierreux).
 
 Le **n° 112** (17 allée Etienne Cabet), marqué introuvable le 4 septembre, a été retrouvé
 le 30 septembre à 11 m de sa position enregistrée : position corrigée et statut repassé à
-confirmé, plutôt que de créer un doublon.
+confirmé, plutôt que de créer un doublon. De même, le **n° 19** (4 avenue Pablo Picasso),
+retiré le 4 novembre, a été retrouvé le 9 novembre en face du théâtre des Amandiers, à
+27 m de sa position enregistrée : remis sur la carte à la position relevée.
 
 **Emplacements exclus définitivement.** Le champ `exclus` de `panneaux.json` conserve les
 points dont l'absence a été constatée sur le terrain, avec leurs coordonnées et la date.
@@ -132,7 +137,7 @@ Ils ne doivent pas être réintroduits lors d'un recoupement avec une source ext
 À ce jour : `94 Rue de Sartrouville`.
 
 **Emplacements retirés.** Le champ `retires` de `panneaux.json` garde, avec toutes leurs
-données, les 7 emplacements marqués introuvables sur les photos de rue : `19`, `84`, `107`,
+données, les 6 emplacements marqués introuvables sur les photos de rue : `84`, `107`,
 `115`, `117`, `120` et `R`. L'outil ne les affiche plus. Leur absence n'a pas été constatée
 sur place : si l'un d'eux est retrouvé, il suffit de remettre sa ligne dans `panels`.
 

@@ -5,11 +5,10 @@
  "snapMax": 70,
  "osmTotal": 92,
  "osmMatched": 79,
- "maj": "2026-11-04",
- "version": 14,
+ "maj": "2026-11-09",
+ "version": 15,
  "exclus": [{"a": "94 Rue de Sartrouville", "lat": 48.910616, "lon": 2.216442, "motif": "inexistant, vérifié sur le terrain", "date": "2026-09-09"}],
  "retires": [
-  {"id": "19", "a": "4 Avenue Pablo Picasso", "lat": 48.893431, "lon": 2.212397, "q": "La Boule – Champs-Pierreux", "c": "#2b2b2b", "src": "carte", "lat0": 48.893431, "lon0": 2.212397, "v": {"s": "ko", "d": "2026-09-04"}, "motif": "introuvable sur les photos de rue, absence non constatée sur place", "date": "2026-11-04"},
   {"id": "84", "a": "112 Avenue Jules Quentin", "lat": 48.8972, "lon": 2.186705, "q": "Chemin de l'Île", "c": "#137a3f", "src": "osm", "lat0": 48.8972, "lon0": 2.186705, "osm": "node/4331129899", "snap": 0, "v": {"s": "ko", "d": "2026-09-04"}, "motif": "introuvable sur les photos de rue, absence non constatée sur place", "date": "2026-11-04"},
   {"id": "107", "a": "40 Rue Maurice Thorez", "lat": 48.892621, "lon": 2.195812, "q": "Centre", "c": "#137a3f", "src": "osm", "lat0": 48.892621, "lon0": 2.195812, "osm": "node/4230210910", "snap": 0, "n": "type OSM à confirmer (notice)", "sd": "2025", "v": {"s": "ko", "d": "2026-09-04"}, "motif": "introuvable sur les photos de rue, absence non constatée sur place", "date": "2026-11-04"},
   {"id": "115", "a": "2 Rue du Calvaire", "lat": 48.879795, "lon": 2.207609, "q": "Plateau – Mont-Valérien", "c": "#137a3f", "src": "osm", "lat0": 48.879795, "lon0": 2.207609, "osm": "node/2689332099", "snap": 0, "n": "type OSM à confirmer (notice)", "sd": "2014", "v": {"s": "ko", "d": "2026-09-04"}, "motif": "introuvable sur les photos de rue, absence non constatée sur place", "date": "2026-11-04"},
@@ -35,6 +34,7 @@
   {"id": "16", "a": "1 Boulevard Emile Zola", "lat": 48.894743, "lon": 2.210332, "q": "Université", "c": "#f03030", "src": "carte", "lat0": 48.894743, "lon0": 2.210332, "v": {"s": "ok", "d": "2026-09-04"}},
   {"id": "17", "a": "1 Allée du Tertre", "lat": 48.896338, "lon": 2.218097, "q": "Parc Nord", "c": "#7a7a7a", "src": "carte", "lat0": 48.896338, "lon0": 2.218097, "osm": "node/2304085786", "snap": 10, "n": "repère triangulaire de la carte", "v": {"s": "ok", "d": "2026-09-04"}},
   {"id": "18", "a": "112 Rue Salvador Allende", "lat": 48.894115, "lon": 2.224975, "q": "Parc Nord", "c": "#7a7a7a", "src": "carte", "lat0": 48.894115, "lon0": 2.224975, "osm": "node/2304085785", "snap": 7, "n": "repère triangulaire de la carte", "sd": "2023", "v": {"s": "ok", "d": "2026-09-04"}},
+  {"id": "19", "a": "4 Avenue Pablo Picasso", "lat": 48.893222, "lon": 2.212583, "q": "La Boule – Champs-Pierreux", "c": "#2b2b2b", "src": "terrain", "lat0": 48.893431, "lon0": 2.212397, "v": {"s": "ok", "d": "2026-11-09"}, "rep": "en face du théâtre des Amandiers", "n": "retrouvé sur le terrain — en face du théâtre des Amandiers"},
   {"id": "20", "a": "20 Avenue Pablo Picasso (1)", "lat": 48.892418, "lon": 2.214204, "q": "La Boule – Champs-Pierreux", "c": "#2b2b2b", "src": "carte", "lat0": 48.892418, "lon0": 2.214204, "v": {"s": "ok", "d": "2026-09-04"}},
   {"id": "21", "a": "20 Avenue Pablo Picasso (2)", "lat": 48.891547, "lon": 2.214021, "q": "La Boule – Champs-Pierreux", "c": "#2b2b2b", "src": "carte", "lat0": 48.891547, "lon0": 2.214021, "v": {"s": "ok", "d": "2026-09-04"}},
   {"id": "22", "a": "25 Avenue Pablo Picasso", "lat": 48.891654, "lon": 2.214746, "q": "La Boule – Champs-Pierreux", "c": "#2b2b2b", "src": "carte", "lat0": 48.891654, "lon0": 2.214746, "v": {"s": "ok", "d": "2026-09-04"}},
@@ -128,6 +128,9 @@
   {"id": "135", "a": "29 Place Nelson Mandela", "rep": "Les Terrasses", "lat": 48.898466, "lon": 2.219066, "q": "Université", "src": "terrain", "lat0": 48.898466, "lon0": 2.219066, "v": {"s": "ok", "d": "2026-11-04"}, "n": "relevé sur le terrain — Les Terrasses"},
   {"id": "136", "a": "2 Allée d'Auvergne", "rep": "Les Provinces", "lat": 48.900272, "lon": 2.219193, "q": "Université", "src": "terrain", "lat0": 48.900272, "lon0": 2.219193, "v": {"s": "ok", "d": "2026-11-04"}, "n": "relevé sur le terrain — Les Provinces"},
   {"id": "137", "a": "67 Boulevard Jules Mansart", "rep": "près de l'école Miriam Makeba, position approchée", "lat": 48.89854, "lon": 2.2127, "q": "Université", "src": "terrain", "lat0": 48.89854, "lon0": 2.2127, "n": "relevé sur le terrain — près de l'école Miriam Makeba, position approchée"},
-  {"id": "138", "a": "31 Terrasse de l'Université", "rep": "African Fusion", "lat": 48.89929, "lon": 2.21371, "q": "Université", "src": "terrain", "lat0": 48.89929, "lon0": 2.21371, "v": {"s": "ok", "d": "2026-11-04"}, "n": "relevé sur le terrain — African Fusion"}
+  {"id": "138", "a": "31 Terrasse de l'Université", "rep": "African Fusion", "lat": 48.89929, "lon": 2.21371, "q": "Université", "src": "terrain", "lat0": 48.89929, "lon0": 2.21371, "v": {"s": "ok", "d": "2026-11-04"}, "n": "relevé sur le terrain — African Fusion"},
+  {"id": "139", "a": "Allée des Demoiselles d'Avignon", "rep": "avenue Pablo Picasso", "lat": 48.88925, "lon": 2.22675, "q": "Parc Sud", "src": "terrain", "lat0": 48.88925, "lon0": 2.22675, "v": {"s": "ok", "d": "2026-11-09"}, "n": "relevé sur le terrain — avenue Pablo Picasso"},
+  {"id": "140", "a": "25 Rue de la Paix", "rep": "de l'autre côté de l'avenue Pablo Picasso", "lat": 48.887167, "lon": 2.223583, "q": "Parc Sud", "src": "terrain", "lat0": 48.887167, "lon0": 2.223583, "v": {"s": "ok", "d": "2026-11-09"}, "n": "relevé sur le terrain — de l'autre côté de l'avenue Pablo Picasso"},
+  {"id": "141", "a": "Mail de la Fraternité", "rep": "limite Parc Sud / Champs-Pierreux", "lat": 48.889222, "lon": 2.215028, "q": "La Boule – Champs-Pierreux", "src": "terrain", "lat0": 48.889222, "lon0": 2.215028, "v": {"s": "ok", "d": "2026-11-09"}, "n": "relevé sur le terrain — limite Parc Sud / Champs-Pierreux"}
  ]
 }
