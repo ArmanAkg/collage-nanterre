@@ -109,6 +109,7 @@ label.ck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mu
 .it .act.fait{opacity:1;color:var(--violet);border:1px solid var(--line);border-radius:7px;background:#fff;font-size:13px;font-weight:700;padding:3px 9px}
 .suivi .pin.sel{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,21,48,.45),0 1px 4px rgba(0,0,0,.45)}
 button.primary.rouge{background:var(--rouge);border-color:var(--rouge)}
+button.primary.orange{background:#e8730c;border-color:#e8730c}
 #grab{display:none}
 
 /* ---------- téléphone / tablette ---------- */
@@ -276,9 +277,9 @@ button.primary.rouge{background:var(--rouge);border-color:var(--rouge)}
           <input type="date" id="dS" aria-label="Date du passage">
         </div>
         <div class="row acts" id="actsS">
-          <button class="primary" data-t="colle">Collé</button>
-          <button class="primary" data-t="ok">Toujours collé</button>
-          <button class="primary rouge" data-t="recouvert">Recouvert</button>
+          <button class="primary" data-t="colle" title="Affiche collée aujourd'hui, ou toujours en place">Affiché LFI</button>
+          <button class="primary orange" data-t="dechire" title="Affiche déchirée : à refaire">Déchiré</button>
+          <button class="primary rouge" data-t="recouvert" title="Affiche recouverte par une autre : à refaire">Recouvert</button>
         </div>
         <div id="msgS"></div>
         <p class="note" id="etatS"></p>
@@ -492,8 +493,11 @@ $('#bStartAddr').onclick=async()=>{
   try{ const g=await geocode(q); setStart(g.lat,g.lon,cleanAddr(g.label)); map.setView([g.lat,g.lon],16); $('#err').innerHTML=''; }
   catch(e){ $('#err').innerHTML='<p class="err">'+esc(e.message)+'</p>'; }
 };
+/* Sur téléphone, toucher la carte au-dessus du volet le replie. Les points gardent leur
+   propre clic (sélection), qui n'arrive pas jusqu'ici. */
 map.on('click',e=>{
   if(choixDepart){ setStart(e.latlng.lat,e.latlng.lng); choixDepart=false; updPick(); }
+  if(isMobile()&&sheetOpen()) sheet(false);
 });
 
 /* ---------- optimisation de tournée (TSP boucle) ---------- */
@@ -718,9 +722,14 @@ function openGmaps(){
 /* ---------- suivi des passages ---------- */
 /* Historique partagé par le service du dossier worker/, ouvert à tous et sans nom. Une file
    d'attente garde dans le navigateur ce qui n'a pas pu partir, faute de réseau sur le terrain. */
-const SUIVI_API='https://collage-suivi.collage-nanterre.workers.dev/passages';
+/* En local, la page parle au service local (wrangler dev, port 8787) : un essai ne touche
+   jamais aux vrais passages. */
+const SUIVI_API=/^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+  ? 'http://localhost:8787/passages'
+  : 'https://collage-suivi.collage-nanterre.workers.dev/passages';
 const LS_SUIVI='collage-nanterre-suivi-recus', LS_ATTENTE='collage-nanterre-suivi-attente';
-const TYPES={colle:'collé',ok:'toujours collé',recouvert:'recouvert'};
+/* « Affiché LFI » réunit collé et toujours collé ; les anciens « ok » s'affichent pareil. */
+const TYPES={colle:'affiché LFI',ok:'affiché LFI',dechire:'déchiré',recouvert:'recouvert'};
 const ETATS=[
   {max:7,       nom:'Moins de 7 jours',  c:'#4c0297', t:'#fff'},
   {max:14,      nom:'7 à 14 jours',      c:'#8a5cc7', t:'#fff'},
@@ -729,8 +738,9 @@ const ETATS=[
 ];
 /* Recouvert : à refaire, quelle que soit la date du signalement. */
 const RECOUVERT={nom:'Recouvert', c:'#d1271c', t:'#fff'};
+const DECHIRE={nom:'Déchiré', c:'#e8730c', t:'#fff'};
 let passages=[], recus=[], attente=[], horsLigne=false, syncEnCours=false, syncEncore=false;
-let dernierPar={}, selS=new Set(), dernierLot=null;
+let dernierPar={}, selS=new Set(), dernierLot=null, refus=0;
 
 const auj=()=>{ const d=new Date(); return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
 const ageJ=d=>Math.round((Date.parse(auj())-Date.parse(d))/864e5);
@@ -762,6 +772,7 @@ async function suiviEnvoyer(o){
   const r=await fetch(o.op==='del'?SUIVI_API+'/'+o.b:SUIVI_API, o.op==='del'?{method:'DELETE'}:
     {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:o.t,d:o.d,b:o.b,ids:o.ids})});
   if(r.status>=500) throw new Error('service indisponible');
+  return r.ok;          // refusé (4xx) : inutile de le renvoyer, mais il faut le dire
 }
 async function suiviSync(){
   if(syncEnCours){ syncEncore=true; return; }
@@ -769,8 +780,12 @@ async function suiviSync(){
   const avant=JSON.stringify(passages);
   try{
     while(attente.length){
-      await suiviEnvoyer(attente[0]);
-      attente.shift(); suiviGarder();
+      const accepte=await suiviEnvoyer(attente[0]);
+      const o=attente.shift(); suiviGarder();
+      if(!accepte){
+        refus++;
+        if(dernierLot&&dernierLot.b===o.b) dernierLot=null;
+      }
     }
     const r=await fetch(SUIVI_API,{cache:'no-store'});
     if(!r.ok) throw new Error('service indisponible');
@@ -796,6 +811,7 @@ function suiviIndexer(){
 function etat(id){
   const x=dernierPar[id], a=x?ageJ(x.d):Infinity;
   if(x&&x.t==='recouvert') return RECOUVERT;
+  if(x&&x.t==='dechire') return DECHIRE;
   return ETATS.find(e=>a<e.max)||ETATS[ETATS.length-1];
 }
 function libPassage(id){
@@ -813,7 +829,7 @@ function dateS(){
 function suiviMarquer(t,ids){
   if(!ids.length) return;
   const d=dateS(), b=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-  attente.push({op:'add',t,d,b,ids});
+  attente.push({op:'add',t,d,b,ids}); refus=0;
   suiviGarder(); suiviAppliquer();
   dernierLot={b,t,d,n:ids.length};
   selS.clear();
@@ -827,6 +843,7 @@ function suiviAnnuler(){
   const enAttente=attente.some(o=>o.op==='add'&&o.b===b);
   attente=attente.filter(o=>o.b!==b);
   if(!enAttente) attente.push({op:'del',b});
+  refus=0;
   suiviGarder(); suiviAppliquer();
   dernierLot=null;
   drawMarkers(); renderS();
@@ -843,9 +860,9 @@ function filtreS(g){
 }
 function renderS(){
   const vis=panels;
-  $('#legS').innerHTML=[RECOUVERT,...ETATS].map(e=>'<div><i style="background:'+e.c+'"></i>'+e.nom+
+  $('#legS').innerHTML=[RECOUVERT,DECHIRE,...ETATS].map(e=>'<div><i style="background:'+e.c+'"></i>'+e.nom+
     '<b>'+vis.filter(p=>etat(p.id)===e).length+'</b></div>').join('');
-  const age=p=>etat(p.id)===RECOUVERT?2e9:dernierPar[p.id]?ageJ(dernierPar[p.id].d):1e9;
+  const age=p=>etat(p.id)===RECOUVERT?2e9:etat(p.id)===DECHIRE?1.5e9:dernierPar[p.id]?ageJ(dernierPar[p.id].d):1e9;
   let h='';
   groupsInOrder().forEach(g=>{
     const items=filtreS(g).sort((a,b)=>age(b)-age(a));
@@ -861,7 +878,7 @@ function renderS(){
          '<div class="tx"><div class="nm">'+esc(p.a)+'</div>'+
            '<div class="meta">'+(p.nb>1?'<span class="tagnb">×'+p.nb+'</span>':'')+
              '<span>'+esc(libPassage(p.id))+'</span></div></div>'+
-         '<button class="act fait" data-ok="'+esc(p.id)+'" title="Toujours collé : remet ce panneau à zéro">✓</button>'+
+         '<button class="act fait" data-ok="'+esc(p.id)+'" title="Affiché LFI : collé ou toujours en place, remet ce panneau à zéro">✓</button>'+
          '</div>';
     });
   });
@@ -872,13 +889,15 @@ function renderS(){
   $('#msgS').innerHTML=dernierLot?'<div class="ok"><span>'+dernierLot.n+' emplacement'+(dernierLot.n>1?'s':'')+' : '+
     esc(TYPES[dernierLot.t])+' le '+fmtJ(dernierLot.d)+'</span><button id="bUndoS">Annuler</button></div>':'';
   if($('#bUndoS')) $('#bUndoS').onclick=suiviAnnuler;
-  $('#etatS').textContent=(horsLigne?'Hors ligne : dernier état connu. ':'')+
+  $('#etatS').textContent=(refus?'Actualisation refusée par le service, rien n’a été enregistré. '+
+      'Rechargez la page ; si ça recommence, prévenez l’administrateur. ':'')+
+    (horsLigne?'Hors ligne : dernier état connu. ':'')+
     (horsLigne&&attente.length?attente.length+' actualisation'+(attente.length>1?'s':'')+' en attente d’envoi.':'');
   syncGrab();
 }
 $('#listS').addEventListener('click',e=>{
   const ok=e.target.closest('[data-ok]');
-  if(ok){ e.stopPropagation(); suiviMarquer('ok',[ok.dataset.ok]); return; }
+  if(ok){ e.stopPropagation(); suiviMarquer('colle',[ok.dataset.ok]); return; }
   const g=e.target.closest('.gselS');
   if(g){
     const ids=filtreS(g.dataset.g).map(p=>p.id);

@@ -3,7 +3,8 @@
 //   POST   /passages       {t, d, b, ids} : un lot de passages
 //   DELETE /passages/<b>   annule un lot
 
-const TYPES = new Set(['colle', 'ok', 'recouvert']);
+// « ok » (toujours collé) n'est plus proposé par la page, mais reste accepté pour l'historique.
+const TYPES = new Set(['colle', 'ok', 'dechire', 'recouvert']);
 const MAX_PAR_LOT = 200;
 const ORIGINES = /^(https:\/\/armanakg\.github\.io|http:\/\/localhost(:\d+)?)$/;
 

@@ -20,7 +20,8 @@ que sur cette adresse en `https`, pas sur un fichier ouvert en local.
 - **Feuille de route** à imprimer et ouverture dans **Google Maps**.
 - Onglet **Suivi** : la carte colorée selon le dernier passage (moins de 7 jours, 7 à 14,
   14 à 30, plus de 30 ou jamais), et un clic pour actualiser un panneau, un quartier ou
-  toute une tournée : **collé**, **toujours collé** ou **recouvert** (en rouge, à refaire). Le suivi est
+  toute une tournée : **affiché LFI** (collé ou toujours en place), **déchiré** (en orange) ou
+  **recouvert** (en rouge), ces deux derniers étant à refaire. Le suivi est
   partagé entre tous, sans compte ni nom, par un petit service Cloudflare (dossier `worker/`).
 
 **110 emplacements, 124 panneaux**, sur 10 quartiers de Nanterre. 107 sont confirmés ; 2

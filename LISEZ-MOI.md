@@ -56,11 +56,14 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 
 6. **Onglet Suivi** (lien direct : `…/outil-collage.html#suivi`) — les panneaux prennent
     la couleur de leur dernier passage : moins de 7 jours, 7 à 14, 14 à 30, plus de 30 ou
-    jamais. Le bouton `✓` d'une ligne marque d'un clic « toujours collé ». Pour plusieurs
+    jamais. Le bouton `✓` d'une ligne marque d'un clic « affiché LFI ». Pour plusieurs
     panneaux : les choisir sur la carte ou dans la liste (`tout / rien` pour un quartier,
-    `Tout` pour tout ce que le filtre affiche), puis **Collé**, **Toujours collé** ou
-    **Recouvert**. Un panneau recouvert passe en rouge, quelle que soit la date, et remonte
-    en tête de son quartier jusqu'au prochain passage. La date est celle du jour, modifiable vers le passé ; une date ancienne ne
+    `Tout` pour tout ce que le filtre affiche), puis **Affiché LFI** (collé ou toujours en
+    place), **Déchiré** ou **Recouvert**. Un panneau recouvert passe en rouge, un panneau
+    déchiré en orange, quelle que soit la date ; tous deux remontent en tête de leur quartier
+    jusqu'au prochain passage. Les anciens « toujours collé » s'affichent comme « affiché LFI ». Une actualisation
+    refusée par le service (par exemple si la page est plus récente que lui) est signalée sous
+    les boutons au lieu d'être perdue en silence. La date est celle du jour, modifiable vers le passé ; une date ancienne ne
     remplace pas un passage plus récent. **Annuler** retire la dernière actualisation.
     Après un calcul, `✓ Marquer cette tournée dans le suivi` sélectionne ses panneaux.
 
@@ -72,7 +75,8 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 
     Le service est dans `worker/` (Cloudflare Workers et base D1, offre gratuite), à l'adresse
     `https://collage-suivi.collage-nanterre.workers.dev/passages`. Pour le redéployer :
-    `cd worker`, puis `npx wrangler@4 deploy`. Pour le tester sans réseau : `npx wrangler@4 d1
+    `cd worker`, puis `npx wrangler@4 deploy`. Ouverte en `localhost`, la page parle au
+    service local (port 8787) et jamais au vrai. Pour le tester sans réseau : `npx wrangler@4 d1
     execute collage-suivi --local --file=schema.sql`, puis `npx wrangler@4 dev --port 8787`.
 
 Sélection, mode et départ sont mémorisés dans le navigateur.
@@ -186,7 +190,8 @@ L'outil est prévu pour être utilisé sur le terrain, téléphone en main :
   panneaux sélectionnés, puis distance et durée une fois l'itinéraire calculé — avec un
   bouton **Calculer** directement accessible ;
 - après le calcul, la feuille se replie automatiquement pour laisser voir le tracé, cadré
-  au-dessus de la barre ;
+  au-dessus de la barre ; toucher la carte au-dessus de la feuille la replie aussi (toucher
+  un point le sélectionne sans rien replier) ;
 - le réglage départ + mode est lui aussi replié en une ligne de résumé
   (`Hôtel de ville · à vélo`), pour laisser la place à la liste ;
 - cibles tactiles agrandies, champs en 16 px pour éviter le zoom automatique d'iOS,
