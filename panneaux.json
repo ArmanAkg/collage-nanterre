@@ -5,8 +5,8 @@
  "snapMax": 70,
  "osmTotal": 92,
  "osmMatched": 79,
- "maj": "2026-11-12",
- "version": 16,
+ "maj": "2026-11-16",
+ "version": 17,
  "exclus": [{"a": "94 Rue de Sartrouville", "lat": 48.910616, "lon": 2.216442, "motif": "inexistant, vérifié sur le terrain", "date": "2026-09-09"}],
  "retires": [
   {"id": "84", "a": "112 Avenue Jules Quentin", "lat": 48.8972, "lon": 2.186705, "q": "Chemin de l'Île", "c": "#137a3f", "src": "osm", "lat0": 48.8972, "lon0": 2.186705, "osm": "node/4331129899", "snap": 0, "v": {"s": "ko", "d": "2026-09-04"}, "motif": "introuvable sur les photos de rue, absence non constatée sur place", "date": "2026-11-04"},
@@ -132,6 +132,7 @@
   {"id": "138", "a": "31 Terrasse de l'Université", "rep": "African Fusion", "lat": 48.89929, "lon": 2.21371, "q": "Université", "src": "terrain", "lat0": 48.89929, "lon0": 2.21371, "v": {"s": "ok", "d": "2026-11-04"}, "n": "relevé sur le terrain — African Fusion"},
   {"id": "139", "a": "Allée des Demoiselles d'Avignon", "rep": "avenue Pablo Picasso", "lat": 48.88925, "lon": 2.22675, "q": "Parc Sud", "src": "terrain", "lat0": 48.88925, "lon0": 2.22675, "v": {"s": "ok", "d": "2026-11-09"}, "n": "relevé sur le terrain — avenue Pablo Picasso"},
   {"id": "140", "a": "25 Rue de la Paix", "rep": "de l'autre côté de l'avenue Pablo Picasso", "lat": 48.887167, "lon": 2.223583, "q": "Parc Sud", "src": "terrain", "lat0": 48.887167, "lon0": 2.223583, "v": {"s": "ok", "d": "2026-11-09"}, "n": "relevé sur le terrain — de l'autre côté de l'avenue Pablo Picasso"},
-  {"id": "141", "a": "Mail de la Fraternité", "rep": "limite Parc Sud / Champs-Pierreux", "lat": 48.889222, "lon": 2.215028, "q": "La Boule – Champs-Pierreux", "src": "terrain", "lat0": 48.889222, "lon0": 2.215028, "v": {"s": "ok", "d": "2026-11-09"}, "n": "relevé sur le terrain — limite Parc Sud / Champs-Pierreux"}
+  {"id": "141", "a": "Mail de la Fraternité", "rep": "limite Parc Sud / Champs-Pierreux", "lat": 48.889222, "lon": 2.215028, "q": "La Boule – Champs-Pierreux", "src": "terrain", "lat0": 48.889222, "lon0": 2.215028, "v": {"s": "ok", "d": "2026-11-09"}, "n": "relevé sur le terrain — limite Parc Sud / Champs-Pierreux"},
+  {"id": "143", "a": "14 Allée Etienne Cabet", "lat": 48.889806, "lon": 2.183139, "q": "Vieux-Pont – Sainte-Geneviève", "src": "terrain", "lat0": 48.889806, "lon0": 2.183139, "v": {"s": "ok", "d": "2026-11-16"}, "n": "relevé sur le terrain"}
  ]
 }

@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 115 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `panneaux.json` | les 116 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `zones.json` | contours des 6 boucles des groupes Telegram et de la ville, copiés de l'outil Tractage ; tracés en pointillés sur la carte |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (archive, l'outil ne l'affiche plus) |
 | `690d4825-….jfif` | l'image source d'origine |
@@ -87,7 +87,7 @@ l'historique git (`git show cf30235:outil-collage.html`).
 
 ## D'où viennent les données
 
-**115 emplacements, 129 panneaux physiques**, sur 10 quartiers de Nanterre.
+**116 emplacements, 130 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
@@ -111,7 +111,7 @@ Cinq sources :
   traité jusqu'ici.
 - **`Framacarte` — 2 emplacements** (n° 124 et 125) : `8 Rue Jacques Decour` et
   `56 Rue Abdelmalek Sayad`. **Non vérifiés**, à contrôler sur place.
-- **`Terrain` — 18 emplacements** relevés directement sur place et
+- **`Terrain` — 19 emplacements** relevés directement sur place et
   confirmés d'office, sauf `137` (67 boulevard Jules Mansart, adresse absente de la Base
   Adresse Nationale : position approchée, près de l'école Miriam Makeba, à vérifier) :
   `133` sous le pont face à l'université (2 panneaux), `134` boulevard du 17 Octobre 1961
@@ -124,6 +124,7 @@ Cinq sources :
   Au Parc Sud : `139` allée des Demoiselles d'Avignon (avenue Pablo Picasso), `140` 25 rue
   de la Paix (de l'autre côté de l'avenue) et `141` mail de la Fraternité (limite Parc Sud /
   Champs-Pierreux). Place Édouard Mayer : `142` côté nord, en plus du `67`.
+  Au Vieux-Pont : `143` 14 allée Étienne Cabet.
 
 Le **n° 112** (17 allée Etienne Cabet), marqué introuvable le 4 septembre, a été retrouvé
 le 30 septembre à 11 m de sa position enregistrée : position corrigée et statut repassé à

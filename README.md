@@ -24,7 +24,7 @@ que sur cette adresse en `https`, pas sur un fichier ouvert en local.
   **recouvert** (en rouge), ces deux derniers étant à refaire. Le suivi est
   partagé entre tous, sans compte ni nom, par un petit service Cloudflare (dossier `worker/`).
 
-**115 emplacements, 129 panneaux**, sur 10 quartiers de Nanterre. 112 sont confirmés ; 2
+**116 emplacements, 130 panneaux**, sur 10 quartiers de Nanterre. 113 sont confirmés ; 2
 viennent d'une carte tierce et 1 a une position approchée : ces 3 restent à vérifier sur
 place. Les 6 emplacements introuvables ont été retirés de la carte et sont conservés dans le
 champ `retires` de `panneaux.json`.
