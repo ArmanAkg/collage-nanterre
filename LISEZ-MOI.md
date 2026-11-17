@@ -24,7 +24,7 @@ pas : le navigateur bloque la lecture de `panneaux.json` en `file://`.
 | Fichier | Rôle |
 |---|---|
 | `outil-collage.html` | l'outil (page unique, aucune installation) |
-| `panneaux.json` | les 116 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
+| `panneaux.json` | les 115 emplacements : n°, adresse, quartier, coordonnées, lien OSM, statut |
 | `zones.json` | contours des 6 boucles des groupes Telegram et de la ville, copiés de l'outil Tractage ; tracés en pointillés sur la carte |
 | `carte-panneaux.jpg` | la carte d'origine, calée géographiquement (archive, l'outil ne l'affiche plus) |
 | `690d4825-….jfif` | l'image source d'origine |
@@ -87,7 +87,7 @@ l'historique git (`git show cf30235:outil-collage.html`).
 
 ## D'où viennent les données
 
-**116 emplacements, 130 panneaux physiques**, sur 10 quartiers de Nanterre.
+**115 emplacements, 129 panneaux physiques**, sur 10 quartiers de Nanterre.
 
 Ces chiffres sont ceux qui restent **après la campagne de vérification** de septembre 2026 :
 20 emplacements ont été supprimés, 1 repositionné, et les 103 restants portent tous un
@@ -106,7 +106,7 @@ Cinq sources :
   - `R` est la pastille rouge sans numéro, au nord de la carte.
 - **`Liste` — 7 emplacements restants** (n° 74 à 80) issus de `panneaux_suppélementaires.txt`,
   géocodés via la Base Adresse Nationale.
-- **`OSM seul` — 28 emplacements restants** (n° 82 et suivants) présents dans OpenStreetMap mais
+- **`OSM seul` — 27 emplacements restants** (n° 82 et suivants) présents dans OpenStreetMap mais
   **absents de la carte d'origine**, dont **11 dans le quartier du Petit-Nanterre**, jamais
   traité jusqu'ici.
 - **`Framacarte` — 2 emplacements** (n° 124 et 125) : `8 Rue Jacques Decour` et
@@ -132,12 +132,15 @@ confirmé, plutôt que de créer un doublon. De même, le **n° 19** (4 avenue P
 retiré le 4 novembre, a été retrouvé le 9 novembre en face du théâtre des Amandiers, à
 27 m de sa position enregistrée : remis sur la carte à la position relevée. Le **n° 67**
 (1 boulevard du Couchant) correspondait en réalité à deux panneaux distincts place Édouard
-Mayer : il a été déplacé de 23 m sur le panneau côté sud, et le `142` ajouté côté nord.
+Mayer : il a été déplacé de 23 m sur le panneau côté sud, et le `142` ajouté côté nord. Le
+**n° 51** (35 avenue Frédéric et Irène Joliot Curie) a été repositionné le 17 novembre au
+32 rue des Venêts, à 69 m.
 
 **Emplacements exclus définitivement.** Le champ `exclus` de `panneaux.json` conserve les
 points dont l'absence a été constatée sur le terrain, avec leurs coordonnées et la date.
 Ils ne doivent pas être réintroduits lors d'un recoupement avec une source extérieure.
-À ce jour : `94 Rue de Sartrouville`.
+À ce jour : `94 Rue de Sartrouville` et le n° `116` (17 rue Célestin Hébert, point OSM seul,
+absent sur place le 17 novembre 2026).
 
 **Emplacements retirés.** Le champ `retires` de `panneaux.json` garde, avec toutes leurs
 données, les 6 emplacements marqués introuvables sur les photos de rue : `84`, `107`,
